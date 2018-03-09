@@ -6,6 +6,7 @@ import {
 // import logo from './logo.svg';
 import './App.css';
 import Welcome from './screens/Welcome';
+import Deposits from './screens/Deposits';
 
 
 class App extends Component {
@@ -19,11 +20,12 @@ class App extends Component {
           </div>
         </nav>
 
-        <div class="uk-container">
-          <Router>
+        <Router>
+        	<div class="uk-container">
             <Route exact path='/' component={Welcome} />
-          </Router>
-        </div>
+						<Route exact path='/deposits' component={Deposits} />
+        	</div>
+        </Router>
 			</div>
     );
   }
