@@ -1,5 +1,5 @@
 from deposits.models.deposit_model import Deposit
-from .custom_fields import DateTime
+from .custom_fields import Date
 
 
 def extract_special_queries(queries):
@@ -28,11 +28,11 @@ def apply_special_queries(query, specials):
 # DEFINE CUSTOM FILTERS BELOW
 
 def deposit_from(value, query):
-    return query.filter(Deposit.start_date >= DateTime().from_str_query(value))
+    return query.filter(Deposit.start_date >= Date().from_str_query(value))
 
 
 def deposit_to(value, query):
-    return query.filter(Deposit.start_date <= DateTime().from_str_query(value, True))
+    return query.filter(Deposit.start_date <= Date().from_str_query(value, True))
 
 
 def deposit_min(value, query):

@@ -7,7 +7,7 @@ from deposits.models.deposit_model import Deposit as DepositModel
 from deposits.helpers.dao import BaseDAO
 from deposits.helpers.utils import AUTH_HEADER_DEFN
 from deposits.helpers.permissions import has_deposit_access, admin_only
-from deposits.helpers.custom_fields import DateTime
+from deposits.helpers.custom_fields import Date
 from deposits.helpers.query_filters import parse_args
 
 
@@ -18,8 +18,8 @@ DEPOSIT = api.model('Deposit', {
     'bank': fields.String(required=True),
     'account': fields.String(required=True),
     'savings': fields.Float(required=True),
-    'start_date': DateTime(required=True),
-    'end_date': DateTime(required=False),
+    'start_date': Date(required=True),
+    'end_date': Date(required=False),
     'interest_rate': fields.Float(required=True),
     'tax_rate': fields.Float(required=True),
     'user_id': fields.Integer()  # for admin assign stuff
