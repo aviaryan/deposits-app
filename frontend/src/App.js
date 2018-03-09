@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Menu, Container } from 'semantic-ui-react';
 import {
 	BrowserRouter as Router,
 	Route
@@ -12,15 +11,20 @@ import Welcome from './screens/Welcome';
 class App extends Component {
   render() {
     return (
-			<Container>
-				<Menu>
-					<Menu.Header content="Deposits"/>
-				</Menu>
+			<div>
 
-				<Router>
-					<Route exact path='/' component={Welcome} />
-				</Router>
-			</Container>
+				<nav class="uk-navbar-container uk-margin" uk-navbar>
+					<div class="uk-navbar-left">
+						<a class="uk-navbar-item uk-logo" href="/">Deposits</a>
+          </div>
+        </nav>
+
+        <div class="uk-container">
+          <Router>
+            <Route exact path='/' component={Welcome} />
+          </Router>
+        </div>
+			</div>
     );
   }
 }
