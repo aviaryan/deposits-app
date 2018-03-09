@@ -1,0 +1,18 @@
+Flask==0.12.2
+flask-cors==3.0.3
+
+# api
+flask-restplus==0.10.1
+
+# login handler
+Flask-Login==0.4.0
+
+# database
+psycopg2==2.7.4
+SQLAlchemy==1.1.14
+Flask-SQLAlchemy==2.3.1
+Flask-Migrate==2.1.1
+flask-script==2.0.6
+
+# auth
+PyJWT==1.5.3

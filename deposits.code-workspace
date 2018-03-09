@@ -5,6 +5,10 @@
 		}
 	],
 	"settings": {
-		"python.pythonPath": "/Users/aviaryan/miniconda3/bin/python"
+		"python.pythonPath": "/Users/aviaryan/miniconda3/bin/python",
+		"files.exclude": {
+			"**/*.pyc": true,
+			"**/__pycache__": true,
+		},
 	}
 }
