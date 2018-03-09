@@ -48,14 +48,21 @@ DAO = DepositDAO(DepositModel, DEPOSIT_POST)
 # DEFINE Query PARAMS
 
 DEPOSIT_PARAMS = {
-    'from': {
+    'from_date': {
         'description': 'Deposits done from this point (YYYY-MM-DD)'
     },
-    'to': {
+    'to_date': {
         'description': 'Deposits done till this point'
     },
     'order_by': {
         'description': 'Order by a field, example "start_date.desc" or "bank.asc"'
+    },
+    'bank': {},
+    'min_savings': {
+        'description': 'Deposits done with minimum this amount'
+    },
+    'max_savings': {
+        'description': 'Deposits done with maximum this amount'
     },
 }
 
@@ -64,10 +71,13 @@ class DepositResource():
     Deposit Resource Base class
     """
     deposit_parser = reqparse.RequestParser()
-    deposit_parser.add_argument('from', type=str, dest='__deposit_from')
-    deposit_parser.add_argument('to', type=str, dest='__deposit_to')
+    deposit_parser.add_argument('from_date', type=str, dest='__deposit_from')
+    deposit_parser.add_argument('to_date', type=str, dest='__deposit_to')
     deposit_parser.add_argument('order_by', type=str, dest='__deposit_order_by')
-
+    deposit_parser.add_argument('bank', type=str)
+    deposit_parser.add_argument('min_savings', type=float, dest='__deposit_min')
+    deposit_parser.add_argument('max_savings', type=float, dest='__deposit_max')
+    # TODO: check this float thing
 
 
 @api.route('/deposits/<int:deposit_id>')

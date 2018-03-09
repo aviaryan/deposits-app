@@ -3,6 +3,7 @@
 The first step is to install requirements.
 
 ```sh
+cd backend/
 pip install -r requirements.txt
 ```
 

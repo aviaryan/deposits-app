@@ -35,6 +35,14 @@ def deposit_to(value, query):
     return query.filter(Deposit.start_date <= DateTime().from_str_query(value, True))
 
 
+def deposit_min(value, query):
+    return query.filter(Deposit.savings >= query)
+
+
+def deposit_max(value, query):
+    return query.filter(Deposit.savings <= query)
+
+
 def deposit_order_by(value, query):
     col, direction = value.split('.')
     col = getattr(Deposit, col)
@@ -49,6 +57,8 @@ def deposit_order_by(value, query):
 FILTERS_LIST = {
     '__deposit_to': deposit_to,
     '__deposit_from': deposit_from,
+    '__deposit_min': deposit_min,
+    '__deposit_max': deposit_max,
     '__deposit_order_by': deposit_order_by,
 }
 
