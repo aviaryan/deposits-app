@@ -3,6 +3,8 @@ import {
 	BrowserRouter as Router,
 	Route
 } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { unsetLogin } from './actions/actions';
 // import logo from './logo.svg';
 import './App.css';
 import Welcome from './screens/Welcome';
@@ -14,14 +16,20 @@ class App extends Component {
     return (
 			<div>
 
-				<nav class="uk-navbar-container uk-margin" uk-navbar>
-					<div class="uk-navbar-left">
-						<a class="uk-navbar-item uk-logo" href="/">Deposits</a>
+				<nav className="uk-navbar-container uk-margin" uk-navbar="true">
+					<div className="uk-navbar-left">
+						<a className="uk-navbar-item uk-logo" href="/">Deposits</a>
           </div>
+
+					{this.props.login &&
+						<div className="uk-navbar-right uk-navbar-item">
+							<button className="uk-button uk-button-default" onClick={this.props.onLogout}>LOGOUT</button>
+						</div>
+					}
         </nav>
 
         <Router>
-        	<div class="uk-container">
+        	<div className="uk-container">
             <Route exact path='/' component={Welcome} />
 						<Route exact path='/deposits' component={Deposits} />
         	</div>
@@ -31,4 +39,18 @@ class App extends Component {
   }
 }
 
-export default App;
+const mapStateToProps = state => {
+	return {
+		login: state.login
+	}
+}
+
+const mapDispatchToProps = dispatch => {
+	return {
+		onLogout: () => {
+			dispatch(unsetLogin());
+		}
+	}
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
