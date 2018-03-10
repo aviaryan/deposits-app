@@ -3,7 +3,7 @@ import $ from 'jquery';
 const ROOT = 'http://localhost:5000/api/v1/';
 
 
-function ajax(type, url, scb, body = null, token = null){
+function ajax(type, url, scb, body = null, token = null, ecb = null){
 	let options = {
 		type: type,
 		url: ROOT + url,
@@ -21,12 +21,16 @@ function ajax(type, url, scb, body = null, token = null){
 			request.setRequestHeader("Authorization", 'Bearer ' + token);
 		};
 	}
+	// error
+	if (ecb) {
+		options['error'] = ecb;
+	}
 	// send
 	$.ajax(options);
 }
 
-export function post(url, body, scb){
-	ajax('POST', url, scb, body);
+export function post(url, body, scb, ecb = null){
+	ajax('POST', url, scb, body, null, ecb);
 }
 
 export function get(url, token, scb){

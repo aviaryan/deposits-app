@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 // import jquery from 'jquery';
 import { post, get } from '../lib/ajax';
 import { setLogin } from '../actions/actions';
+import { notify } from '../lib/notify';
 
 
 class Welcome extends Component {
@@ -61,6 +62,9 @@ const mapDispatchToProps = dispatch => {
 				get('users/user', res.token, (user) => {
 					dispatch(setLogin(user, res.token));
 				});
+			}, (xhr) => {
+				console.log(xhr.responseJSON);
+				notify(xhr.responseJSON['message']);
 			});
 		}
 	}
