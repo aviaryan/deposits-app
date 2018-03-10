@@ -8,6 +8,8 @@ class Authed extends Component {
 		if (!this.props.login) {
 			this.props.history.push('/');
 		}
+		// init empty state, avoids doing it again and again
+		this.state = {};
 	}
 
 	shouldComponentUpdate(np, ns) {
@@ -15,7 +17,9 @@ class Authed extends Component {
 			this.props.history.push('/');
 			return false;
 		}
-		return super.shouldComponentUpdate(np, ns);
+		return true; // super.shouldComponentUpdate(np, ns);
+		// this is a JS issue https://github.com/facebook/react/issues/3280
+		// but its ok to return true here https://reactjs.org/docs/react-component.html#shouldcomponentupdate
 	}
 
 	unauthorized(){

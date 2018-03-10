@@ -1,4 +1,4 @@
-import {SET_LOGIN, UNSET_LOGIN} from '../actions/actions'
+import {SET_LOGIN, UNSET_LOGIN, UPDATE_LOGIN} from '../actions/actions'
 
 export default function login(state = null, action){
 	switch (action.type) {
@@ -7,6 +7,8 @@ export default function login(state = null, action){
 			return action.user
 		case UNSET_LOGIN:
 			return null
+		case UPDATE_LOGIN:
+			return { ...state, ...action.user }
 		default:
 			return state
 	}
