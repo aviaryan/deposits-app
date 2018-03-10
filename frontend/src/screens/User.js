@@ -1,30 +1,12 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
+import Authed from './Authed';
 
 
-class User extends Component {
-	constructor(props) {
-		super(props);
-		if (!this.props.login) {
-			this.props.history.push('/');
-		}
-	}
-
-	shouldComponentUpdate(np, ns) {
-		if (!np.login) {
-			this.props.history.push('/');
-			return false;
-		}
-		return super.shouldComponentUpdate(np, ns);
-	}
-
+class User extends Authed {
 	render() {
 		if (!this.props.login) {
-			return (
-				<div>
-					Unauthorized
-				</div>
-			)
+			return super.unauthorized();
 		}
 		return (
 			<div>
