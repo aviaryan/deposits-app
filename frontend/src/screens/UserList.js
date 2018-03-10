@@ -57,22 +57,27 @@ class UserList extends Authed {
 		}
 		// get users
 		const users = this.props.users.map((user) =>
-			<tr key={user.id}>
+			<tr key={user.id} className="hover-pointer"
+				onClick={() => this.props.history.push(`/users/${user.id}`)}>
 				<td>{user.id}</td>
-				<td>{user.full_name}</td>
+				<td className="uk-text-nowrap">{user.full_name}</td>
 				<td>{user.email}</td>
 				<td>{user.username}</td>
+				<td><input className="uk-checkbox" type="checkbox" checked={user.is_admin} disabled="true"/></td>
+				<td><input className="uk-checkbox" type="checkbox" checked={user.is_manager} disabled="true"/></td>
 			</tr>
 		);
 		return (
 			<div className="uk-overflow-auto">
-				<table className="uk-table uk-table-hover uk-table-middle uk-table-divider">
+				<table className="uk-table uk-table-hover uk-table-middle uk-table-divider uk-table-striped uk-table-hover">
 					<thead>
 						<tr>
 							<th className="uk-table-shrink">ID</th>
-							<th className="uk-table-expand">Name</th>
-							<th className="uk-table-expand">Email</th>
-							<th className="uk-width-shrink">Username</th>
+							<th className="uk-table-shrink">Name</th>
+							<th>Email</th>
+							<th>Username</th>
+							<th className="uk-table-shrink">Admin?</th>
+							<th className="uk-table-shrink">Manager?</th>
 						</tr>
 					</thead>
 					<tbody>

@@ -13,8 +13,10 @@ class User extends Authed {
 	}
 
 	componentDidMount(){
-		let userID = this.props.params ?
-			this.props.params.userID :
+		// console.log(this.props);
+		// ^ looking this, this.props.match.params sounds like a better choice
+		let userID = this.props.match.params.userID ?
+			this.props.match.params.userID :
 			(this.props.login ? this.props.login.id : null);
 		if (!userID){
 			return;
@@ -58,8 +60,6 @@ class User extends Authed {
 		}
 		return (
 			<div>
-				Hi, this is the user page {this.props.params ? this.props.params.userID : this.props.login.username}.
-
 				<form className="uk-form-horizontal uk-margin-large">
 
 					<legend className="uk-legend">User Information</legend>
