@@ -30,7 +30,7 @@ class User extends Authed {
 
 	bind(e) {
 		let attr = e.target.getAttribute('data-bind');
-		this.setState({ [attr]: e.target.value });
+		this.setState({ [attr]: (e.target.getAttribute('type') === 'checkbox') ? !this.state[attr] : e.target.value });
 	}
 
 	updateUser(){
@@ -88,7 +88,7 @@ class User extends Authed {
 						</div>
 					</div>
 
-					{(this.state.is_admin || this.state.is_manager) ?
+					{(this.props.login.is_admin || this.props.login.is_manager) ?
 					<div className="uk-margin uk-grid-small uk-child-width-auto uk-grid">
 						<label><input className="uk-checkbox" type="checkbox"
 							checked={this.state.is_admin} onChange={this.bind} data-bind="is_admin" /> Admin?</label>
