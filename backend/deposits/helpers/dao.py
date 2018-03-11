@@ -43,6 +43,7 @@ class BaseDAO:
         if model:
             data = handle_extra_payload(data, model)
             validate_payload(data, model, check_required=check_required)
+            self.full_check(data)
             data = fix_attribute_names(data, model)
         return data
 
@@ -51,3 +52,9 @@ class BaseDAO:
         Abstraction over validate with check_required set to False
         """
         return self.validate(data, model=model, check_required=False)
+
+    def full_check(self, data):
+        """
+        Check data with their relationship to one another
+        """
+        pass

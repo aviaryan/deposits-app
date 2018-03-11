@@ -5,6 +5,7 @@ from flask import g
 from deposits.models.deposit_model import Deposit as DepositModel
 
 from deposits.helpers.dao import BaseDAO
+from deposits.helpers.errors import ValidationError
 from deposits.helpers.utils import AUTH_HEADER_DEFN
 from deposits.helpers.permissions import has_deposit_access, admin_only
 import deposits.helpers.custom_fields as fields
@@ -21,7 +22,7 @@ DEPOSIT = api.model('Deposit', {
     'start_date': fields.Date(required=True),
     'end_date': fields.Date(required=False),
     'interest_rate': fields.Float(required=True, min=-100.0),
-    'tax_rate': fields.Float(required=True, max=100.0),
+    'tax_rate': fields.Float(required=True, min=0.0, max=100.0),
     'user_id': fields.Integer(min=1)  # for admin assign stuff
 })
 
@@ -41,6 +42,13 @@ class DepositDAO(BaseDAO):
             data['user_id'] = current_user.id
         return data['user_id']
 
+    def full_check(self, data):
+        if not data.get('end_date'):
+            pass
+        start = fields.Date().from_str(data['start_date'])
+        end = fields.Date().from_str(data['end_date'])
+        if end < start:
+            raise ValidationError('end_date', 'End date is less than start date')
 
 DAO = DepositDAO(DepositModel, DEPOSIT_POST)
 

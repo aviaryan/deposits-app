@@ -1,4 +1,6 @@
 - [ ] excellent backend validation (password min length, username, realistic values)
 - [x] password 2 times check
+- [ ] basic pagination with filter
+- [ ] list of users to assign deposit
 - [ ] fine tune is_verified
 - [ ] front-end validation
