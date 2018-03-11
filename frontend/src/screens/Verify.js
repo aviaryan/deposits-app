@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-// import jquery from 'jquery';
+import { unsetLogin } from './../actions/actions';
 import { get } from '../lib/ajax';
-// import { setLogin } from '../actions/actions';
 import { notify } from '../lib/notify';
 
 
@@ -20,6 +19,8 @@ class Verify extends Component {
 			this.setState({ fail: true });
 			return;
 		}
+		// log out of current session
+		this.props.logOut();
 		get('users/_verify' + query, null, (user) => {
 			this.setState({ user: user });
 		}, (xhr) => {
@@ -51,5 +52,13 @@ class Verify extends Component {
 	}
 }
 
+const mapDispatchToProps = dispatch => {
+	return {
+		logOut: () => {
+			dispatch(unsetLogin());
+		}
+	}
+}
+
 // TODO: update users state
-export default connect(null, null)(Verify);
+export default connect(null, mapDispatchToProps)(Verify);
