@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import {
 	BrowserRouter as Router,
 	Route,
-	Link
+	Link,
+	Switch
 } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { unsetLogin } from './actions/actions';
@@ -46,15 +47,16 @@ class App extends Component {
 							}
 						</nav>
 
-						<div className="uk-container">
+						<div className="uk-container"><Switch>
 							<Route exact path='/' component={Welcome} />
 							<Route exact path='/deposits' component={Deposits} />
+							<Route exact path='/users/new' component={SignUp} />
+							<Route exact path='/signup' component={SignUp} />
 							<Route path='/users/:userID' component={User} />
 							<Route exact path='/profile' component={User} />
-							<Route exact path='/signup' component={SignUp} />
 							<Route exact path='/users' component={UserList} />
 							<Route exact path='/verify' component={Verify} />
-						</div>
+						</Switch></div>
 					</div>
 				</Router>
 			</div>

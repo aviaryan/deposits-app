@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 // import jquery from 'jquery';
 import { post } from '../lib/ajax';
+import { notify } from '../lib/notify';
 // import { setLogin } from '../actions/actions';
 // import { notify } from '../lib/notify';
 
@@ -9,24 +10,22 @@ import { post } from '../lib/ajax';
 class SignUp extends Component {
 	constructor(props) {
 		super(props);
-		this.state = { email: '', password: '', username: '', verify: '', full_name: '' };
+		this.state = { email: '', password: '', username: '', verify: '', full_name: '', is_admin: false, is_manager: false };
 		this.bind = this.bind.bind(this);
 	}
 
 	bind(e) {
 		let attr = e.target.getAttribute('data-bind');
-		this.setState({ [attr]: e.target.value });
+		this.setState({ [attr]: (e.target.getAttribute('type') === 'checkbox') ? !this.state[attr] : e.target.value });
 	}
 
-	// componentDidUpdate() {
-	// 	if (this.props.login) {
-	// 		this.props.history.push('/deposits');
-	// 	}
-	// }
-
 	createAccount(){
-		this.props.onRegister(this.state, () => {
-			this.setState({accountCreated: true});
+		this.props.onRegister(this.state, this.props.login, () => {
+			if (this.props.login) {
+				notify('Account was created. You may create another account or go back.');
+			} else {
+				this.setState({accountCreated: true});
+			}
 		});
 	}
 
@@ -76,6 +75,16 @@ class SignUp extends Component {
 							<input className="uk-input" type="password" value={this.state.verify} placeholder="Type password again"
 								onChange={this.bind} data-bind="verify" />
 						</div>
+
+						{(this.props.login && this.props.login.is_admin) ?
+							<div className="uk-margin uk-grid-small uk-child-width-auto uk-grid">
+								<label><input className="uk-checkbox" type="checkbox"
+									checked={this.state.is_admin} onChange={this.bind} data-bind="is_admin" /> Admin?</label>
+								<label><input className="uk-checkbox" type="checkbox"
+									checked={this.state.is_manager} onChange={this.bind} data-bind="is_manager" /> Manager?</label>
+							</div>
+							: null}
+
 						<button type="button" className="uk-button uk-button-primary" onClick={this.createAccount.bind(this)}>{btnText}</button>
 					</fieldset>
 				</form>
@@ -92,19 +101,30 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
 	return {
-		onRegister: (state, cb) => {
+		onRegister: (state, login, cb) => {
+			// password different check
 			if (state.password !== state.verify){
 				console.log('password different');
 				return;
 			}
+			// create user pack
 			let user = {username: state.username, email: state.email, password: state.password, full_name: state.full_name};
+			// admin user
+			if (login) {
+				user['is_verified'] = true;
+				user['is_admin'] = state.is_admin;
+				user['is_manager'] = state.is_manager;
+				// ^ backend checks these anyway
+			}
+			console.log("creating", user);
+			// post
 			post('users', user, (res) => {
 				console.log(res);
 				// successful creation callback
 				cb();
 			}, (xhr) => {
 				console.log(xhr.responseJSON);
-			})
+			}, login ? login.token : null);
 		}
 	}
 }

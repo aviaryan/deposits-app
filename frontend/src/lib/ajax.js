@@ -29,8 +29,8 @@ function ajax(type, url, scb, body = null, token = null, ecb = null){
 	$.ajax(options);
 }
 
-export function post(url, body, scb, ecb = null){
-	ajax('POST', url, scb, body, null, ecb);
+export function post(url, body, scb, ecb = null, token = null){
+	ajax('POST', url, scb, body, token, ecb);
 }
 
 export function get(url, token, scb, ecb = null){

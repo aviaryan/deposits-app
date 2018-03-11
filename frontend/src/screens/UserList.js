@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { get } from '../lib/ajax';
+import { Link } from 'react-router-dom';
 import Authed from './Authed';
 import { updateUsers } from '../actions/actions';
 
@@ -77,6 +78,9 @@ class UserList extends Authed {
 		// ^ new ID on top
 		return (
 			<div className="uk-overflow-auto">
+				<div>
+					<Link to="/users/new"><button className="uk-button uk-button-primary">NEW USER</button></Link>
+				</div>
 				<table className="uk-table uk-table-hover uk-table-middle uk-table-divider uk-table-striped uk-table-hover">
 					<thead>
 						<tr>

@@ -158,10 +158,11 @@ class UserList(Resource):
         """Create an user"""
         # fix access level
         data = DAO.fix_access_levels(self.api.payload)
-        user = DAO.create(data)
+        user, code = DAO.create(data)
         # send email
-        send_verify_mail(user[0].email, user[0].username, generate_token(user[0]))
-        return user
+        if not user.is_verified:
+            send_verify_mail(user.email, user.username, generate_token(user))
+        return user, code
 
     @api.header(*AUTH_HEADER_DEFN)
     @login_required
