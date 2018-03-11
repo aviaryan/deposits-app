@@ -12,6 +12,7 @@ import Welcome from './screens/Welcome';
 import Deposits from './screens/Deposits';
 import User from './screens/User';
 import UserList from './screens/UserList';
+import SignUp from './screens/SignUp';
 
 
 class App extends Component {
@@ -31,7 +32,14 @@ class App extends Component {
 										{(this.props.login.is_admin || this.props.login.is_manager) &&
 											<li><Link to="/users">USERS</Link></li>
 										}
-										<li className="uk-navbar-item"><button className="uk-button uk-button-default" onClick={this.props.onLogout}>LOGOUT</button></li>
+										<li className="uk-navbar-item"><button className="uk-button uk-button-danger" onClick={this.props.onLogout}>LOGOUT</button></li>
+									</ul>
+								</div>
+							}
+							{!this.props.login &&
+								<div className="uk-navbar-right">
+									<ul className="uk-navbar-nav">
+									<li><Link to="/signup"><button className="uk-button uk-button-secondary">SIGN UP</button></Link></li>
 									</ul>
 								</div>
 							}
@@ -42,6 +50,7 @@ class App extends Component {
 							<Route exact path='/deposits' component={Deposits} />
 							<Route path='/users/:userID' component={User} />
 							<Route exact path='/profile' component={User} />
+							<Route exact path='/signup' component={SignUp} />
 							<Route exact path='/users' component={UserList} />
 						</div>
 					</div>
