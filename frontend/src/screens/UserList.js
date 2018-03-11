@@ -56,17 +56,25 @@ class UserList extends Authed {
 			);
 		}
 		// get users
-		const users = this.props.users.map((user) =>
-			<tr key={user.id} className="hover-pointer"
-				onClick={() => this.props.history.push(`/users/${user.id}`)}>
-				<td>{user.id}</td>
-				<td className="uk-text-nowrap">{user.full_name}</td>
-				<td>{user.email}</td>
-				<td>{user.username}</td>
-				<td><input className="uk-checkbox" type="checkbox" checked={user.is_admin} disabled="true"/></td>
-				<td><input className="uk-checkbox" type="checkbox" checked={user.is_manager} disabled="true"/></td>
-			</tr>
-		);
+		let users = [];
+		for (let id in this.props.users) {
+			if (this.props.users.hasOwnProperty(id)) {
+				const user = this.props.users[id];
+				users.push(
+					<tr key={user.id} className="hover-pointer"
+						onClick={() => this.props.history.push(`/users/${user.id}`)}>
+						<td>{user.id}</td>
+						<td className="uk-text-nowrap">{user.full_name}</td>
+						<td>{user.email}</td>
+						<td>{user.username}</td>
+						<td><input className="uk-checkbox" type="checkbox" checked={user.is_admin} disabled="true" /></td>
+						<td><input className="uk-checkbox" type="checkbox" checked={user.is_manager} disabled="true" /></td>
+					</tr>
+				);
+			}
+		}
+		users.reverse();
+		// ^ new ID on top
 		return (
 			<div className="uk-overflow-auto">
 				<table className="uk-table uk-table-hover uk-table-middle uk-table-divider uk-table-striped uk-table-hover">
