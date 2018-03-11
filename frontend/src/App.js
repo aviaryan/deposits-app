@@ -13,6 +13,7 @@ import Deposits from './screens/Deposits';
 import User from './screens/User';
 import UserList from './screens/UserList';
 import SignUp from './screens/SignUp';
+import Verify from './screens/Verify';
 
 
 class App extends Component {
@@ -52,6 +53,7 @@ class App extends Component {
 							<Route exact path='/profile' component={User} />
 							<Route exact path='/signup' component={SignUp} />
 							<Route exact path='/users' component={UserList} />
+							<Route exact path='/verify' component={Verify} />
 						</div>
 					</div>
 				</Router>

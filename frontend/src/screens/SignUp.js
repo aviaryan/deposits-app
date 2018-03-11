@@ -24,6 +24,12 @@ class SignUp extends Component {
 	// 	}
 	// }
 
+	createAccount(){
+		this.props.onRegister(this.state, () => {
+			this.setState({accountCreated: true});
+		});
+	}
+
 	render() {
 		let btnText = 'SIGN UP';
 		if (this.props.login){
@@ -36,6 +42,14 @@ class SignUp extends Component {
 			} else {
 				btnText = 'ADD USER';
 			}
+		}
+		// account created?
+		if (this.state.accountCreated) {
+			return (
+				<h3>
+					Your account has been created. Please check your inbox for confirmation email.
+				</h3>
+			);
 		}
 		return (
 			<div>
@@ -62,7 +76,7 @@ class SignUp extends Component {
 							<input className="uk-input" type="password" value={this.state.verify} placeholder="Type password again"
 								onChange={this.bind} data-bind="verify" />
 						</div>
-						<button type="button" className="uk-button uk-button-primary" onClick={() => this.props.onRegister(this.state)}>{btnText}</button>
+						<button type="button" className="uk-button uk-button-primary" onClick={this.createAccount.bind(this)}>{btnText}</button>
 					</fieldset>
 				</form>
 			</div>
@@ -78,7 +92,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
 	return {
-		onRegister: (state) => {
+		onRegister: (state, cb) => {
 			if (state.password !== state.verify){
 				console.log('password different');
 				return;
@@ -86,6 +100,8 @@ const mapDispatchToProps = dispatch => {
 			let user = {username: state.username, email: state.email, password: state.password, full_name: state.full_name};
 			post('users', user, (res) => {
 				console.log(res);
+				// successful creation callback
+				cb();
 			}, (xhr) => {
 				console.log(xhr.responseJSON);
 			})

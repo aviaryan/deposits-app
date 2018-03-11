@@ -140,7 +140,7 @@ class UserVerify(Resource):
     @api.marshal_with(USER)
     def get(self):
         """Verify the user"""
-        token = request.args.get('token')
+        token = request.args.get('token', 'default')
         user = get_user_from_header(token)
         user.is_verified = True
         save_to_db(user)
@@ -160,7 +160,7 @@ class UserList(Resource):
         data = DAO.fix_access_levels(self.api.payload)
         user = DAO.create(data)
         # send email
-        send_verify_mail(user[0].email, generate_token(user[0]))
+        send_verify_mail(user[0].email, user[0].username, generate_token(user[0]))
         return user
 
     @api.header(*AUTH_HEADER_DEFN)

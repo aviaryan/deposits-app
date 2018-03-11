@@ -33,8 +33,8 @@ export function post(url, body, scb, ecb = null){
 	ajax('POST', url, scb, body, null, ecb);
 }
 
-export function get(url, token, scb){
-	ajax('GET', url, scb, null, token);
+export function get(url, token, scb, ecb = null){
+	ajax('GET', url, scb, null, token, ecb);
 }
 
 export function put(url, body, token, scb){
