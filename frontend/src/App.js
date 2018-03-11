@@ -30,7 +30,7 @@ class App extends Component {
 							{this.props.login &&
 								<div className="uk-navbar-right">
 									<ul className="uk-navbar-nav">
-										<li><Link to="/profile">PROFILE</Link></li>
+										<li><Link to="/profile">@{this.props.login.username}</Link></li>
 										{(this.props.login.is_admin || this.props.login.is_manager) &&
 											<li><Link to="/users">USERS</Link></li>
 										}

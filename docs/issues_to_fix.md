@@ -1,5 +1,5 @@
 - [ ] password min length
-- [ ] password 2 times check
+- [x] password 2 times check
 - [ ] front-end validation
 - [ ] backend validation
 - [ ] realistic values for fields (not like 125%)
