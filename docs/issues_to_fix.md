@@ -1,5 +1,4 @@
-- [ ] password min length
+- [ ] excellent backend validation (password min length, username, realistic values)
 - [x] password 2 times check
+- [ ] fine tune is_verified
 - [ ] front-end validation
-- [ ] backend validation
-- [ ] realistic values for fields (not like 125%)
