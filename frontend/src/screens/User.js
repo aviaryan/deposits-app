@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { get, put } from '../lib/ajax';
 import Authed from './Authed';
-import { updateLogin } from '../actions/actions';
+import { updateLogin, updateUser } from '../actions/actions';
 
 
 class User extends Authed {
@@ -44,7 +44,7 @@ class User extends Authed {
 		put(`users/${this.state.userID}`, pack, this.props.login.token, (res) => {
 			console.log(res);
 			if (this.props.login.id === this.state.userID){
-				this.props.updateLogin(pack);
+				this.props.updateUserStore(pack);
 			}
 		});
 	}
@@ -145,8 +145,9 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
 	return {
-		updateLogin: (user) => {
+		updateUserStore: (user) => {
 			dispatch(updateLogin(user));
+			dispatch(updateUser(user));
 		}
 	}
 }
