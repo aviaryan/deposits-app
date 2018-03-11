@@ -33,6 +33,9 @@ class Login(Resource):
         phash, _ = hash_password(data['password'], salt=user.salt)
         # print(user, user.phash, phash)
         if user.phash is not None and user.phash == phash:
+            # account verified?
+            if not user.is_verified:
+                raise NotAuthorizedError('Account not verified, please check your inbox')
             token = generate_token(user)
             return {'token': token}
         else:

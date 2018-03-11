@@ -1,14 +1,15 @@
 from flask_restplus import Namespace, Resource, fields
 from flask_login import login_required
-from flask import g
+from flask import g, request
 
 from deposits.models.user_model import User as UserModel
 
 from deposits.helpers.dao import BaseDAO
 from deposits.helpers.database import save_to_db
-from deposits.helpers.auth import hash_password, login_optional
+from deposits.helpers.auth import hash_password, login_optional, get_user_from_header, generate_token
 from deposits.helpers.errors import ValidationError
 from deposits.helpers.utils import AUTH_HEADER_DEFN
+from deposits.helpers.mail import send_verify_mail
 from deposits.helpers.permissions import has_user_access, staff_only
 
 
@@ -21,6 +22,7 @@ USER = api.model('User', {
     'full_name': fields.String(),
     'is_admin': fields.Boolean(default=False),
     'is_manager': fields.Boolean(default=False),
+    'is_verified': fields.Boolean(default=False),
 })
 
 USER_POST = api.clone('UserPost', USER, {
@@ -29,6 +31,7 @@ USER_POST = api.clone('UserPost', USER, {
 del USER_POST['id']
 
 USER_PUT = api.clone('UserPut', USER_POST)
+del USER_PUT['is_verified']
 
 
 class UserDAO(BaseDAO):
@@ -62,9 +65,12 @@ class UserDAO(BaseDAO):
 
     def fix_access_levels(self, data, id_=None):
         """
-        fixes is_admin and is_manager levels
+        fixes is_admin, is_manager and is_verified levels
         """
         current_user = g.current_user
+        # dont allow changing is_verified on update (id present)
+        if id_ and data.get('is_verified') is not None:
+            del data['is_verified']
         # solve
         if current_user and current_user.is_admin:  # all is good
             return data
@@ -74,11 +80,11 @@ class UserDAO(BaseDAO):
                 data['is_manager'] = False  # this happens in new user case
             return data
         # normal user case
+        if id_ is None:  # dont allow verifying themselves
+            data['is_verified'] = False
         data['is_admin'] = False
         data['is_manager'] = False
         return data
-
-
 
 
 DAO = UserDAO(UserModel, USER_POST, USER_PUT)
@@ -128,6 +134,19 @@ class UserCurrent(Resource):
         return DAO.get(g.current_user.id)
 
 
+@api.route('/users/_verify')
+class UserVerify(Resource):
+    @api.doc('verify_user')
+    @api.marshal_with(USER)
+    def get(self):
+        """Verify the user"""
+        token = request.args.get('token')
+        user = get_user_from_header(token)
+        user.is_verified = True
+        save_to_db(user)
+        return user
+
+
 @api.route('/users')
 class UserList(Resource):
     @api.header(*AUTH_HEADER_DEFN)
@@ -139,7 +158,10 @@ class UserList(Resource):
         """Create an user"""
         # fix access level
         data = DAO.fix_access_levels(self.api.payload)
-        return DAO.create(data)
+        user = DAO.create(data)
+        # send email
+        send_verify_mail(user[0].email, generate_token(user[0]))
+        return user
 
     @api.header(*AUTH_HEADER_DEFN)
     @login_required

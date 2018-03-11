@@ -18,7 +18,8 @@ users = [
         'email': 'avi.aryan123@gmail.com',
         'password': 'normal',
         'is_admin': False,
-        'is_manager': False
+        'is_manager': False,
+        'is_verified': True
     },
     {
         'username': 'avi_admin',
@@ -26,7 +27,8 @@ users = [
         'email': 'avi.aryan123+admin@gmail.com',
         'password': 'admin',
         'is_admin': True,
-        'is_manager': False
+        'is_manager': False,
+        'is_verified': True
     },
     {
         'username': 'avi_manager',
@@ -34,7 +36,8 @@ users = [
         'email': 'avi.aryan123+manager@gmail.com',
         'password': 'manager',
         'is_admin': False,
-        'is_manager': True
+        'is_manager': True,
+        'is_verified': True
     },
 ]
 

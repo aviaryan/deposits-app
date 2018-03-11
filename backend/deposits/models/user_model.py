@@ -16,6 +16,7 @@ class User(db.Model, UserMixin):
 
     is_admin = db.Column(db.Boolean, nullable=False, default=False)
     is_manager = db.Column(db.Boolean, nullable=False, default=False)
+    is_verified = db.Column(db.Boolean, nullable=False, default=False)
 
     # backrefs
     deposits = db.relationship('Deposit', uselist=True, backref='user')

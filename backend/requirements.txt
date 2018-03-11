@@ -17,3 +17,6 @@ flask-script==2.0.6
 
 # auth
 PyJWT==1.5.3
+
+# mails
+sendgrid==5.3.0
