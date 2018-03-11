@@ -1,4 +1,4 @@
-from flask_restplus import Namespace, Resource, fields
+from flask_restplus import Namespace, Resource
 from flask_login import login_required
 from flask import g, request
 
@@ -11,22 +11,23 @@ from deposits.helpers.errors import ValidationError
 from deposits.helpers.utils import AUTH_HEADER_DEFN
 from deposits.helpers.mail import send_verify_mail
 from deposits.helpers.permissions import has_user_access, staff_only
+import deposits.helpers.custom_fields as fields
 
 
 api = Namespace('users', description='Users', path='/')
 
 USER = api.model('User', {
     'id': fields.Integer(required=True),
-    'email': fields.String(required=True),
-    'username': fields.String(required=True),
-    'full_name': fields.String(),
+    'email': fields.Email(required=True),
+    'username': fields.String(required=True, min=3, nospace=True),
+    'full_name': fields.String(min=2, max=100),
     'is_admin': fields.Boolean(default=False),
     'is_manager': fields.Boolean(default=False),
     'is_verified': fields.Boolean(default=False),
 })
 
 USER_POST = api.clone('UserPost', USER, {
-    'password': fields.String(required=True),
+    'password': fields.String(required=True, min=6, passw=True),
 })
 del USER_POST['id']
 

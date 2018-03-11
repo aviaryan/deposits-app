@@ -1,15 +1,16 @@
-from flask_restplus import Namespace, Resource, fields
+from flask_restplus import Namespace, Resource
 
 from deposits.models.user_model import User as UserModel
 
 from deposits.helpers.auth import generate_token, hash_password
 from deposits.helpers.errors import NotAuthorizedError
+import deposits.helpers.custom_fields as fields
 
 
 api = Namespace('auth', description='Auth', path='/')  # noqa
 
 LOGIN = api.model('Login', {
-    'email': fields.String(required=True),
+    'email': fields.Email(required=True),
     'password': fields.String(required=True),
 })
 

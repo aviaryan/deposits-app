@@ -1,4 +1,4 @@
-from flask_restplus import Namespace, Resource, fields, reqparse
+from flask_restplus import Namespace, Resource, reqparse
 from flask_login import login_required
 from flask import g
 
@@ -7,7 +7,7 @@ from deposits.models.deposit_model import Deposit as DepositModel
 from deposits.helpers.dao import BaseDAO
 from deposits.helpers.utils import AUTH_HEADER_DEFN
 from deposits.helpers.permissions import has_deposit_access, admin_only
-from deposits.helpers.custom_fields import Date
+import deposits.helpers.custom_fields as fields
 from deposits.helpers.query_filters import parse_args
 
 
@@ -16,13 +16,13 @@ api = Namespace('deposits', description='Deposits', path='/')
 DEPOSIT = api.model('Deposit', {
     'id': fields.Integer(required=True),
     'bank': fields.String(required=True),
-    'account': fields.String(required=True),
-    'savings': fields.Float(required=True),
-    'start_date': Date(required=True),
-    'end_date': Date(required=False),
-    'interest_rate': fields.Float(required=True),
-    'tax_rate': fields.Float(required=True),
-    'user_id': fields.Integer()  # for admin assign stuff
+    'account': fields.String(required=True, min=11, max=20),
+    'savings': fields.Float(required=True, minx=0.0),
+    'start_date': fields.Date(required=True),
+    'end_date': fields.Date(required=False),
+    'interest_rate': fields.Float(required=True, min=-100.0),
+    'tax_rate': fields.Float(required=True, max=100.0),
+    'user_id': fields.Integer(min=1)  # for admin assign stuff
 })
 
 DEPOSIT_POST = api.clone('DepositPost', DEPOSIT, {})
