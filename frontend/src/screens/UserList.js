@@ -62,7 +62,7 @@ class UserList extends Authed {
 			if (this.props.users.hasOwnProperty(id)) {
 				const user = this.props.users[id];
 				users.push(
-					<tr key={user.id} className="hover-pointer"
+					<tr key={id} className="hover-pointer"
 						onClick={() => this.props.history.push(`/users/${user.id}`)}>
 						<td>{user.id}</td>
 						<td className="uk-text-nowrap">{user.full_name}</td>

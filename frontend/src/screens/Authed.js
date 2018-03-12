@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-// import { connect } from 'react-redux';
+import UnAuthorized from '../components/UnAuthorized';
 
 
 class Authed extends Component {
@@ -24,9 +24,7 @@ class Authed extends Component {
 
 	unauthorized(){
 		return (
-			<div>
-				Unauthorized
-			</div>
+			<UnAuthorized />
 		)
 	}
 }

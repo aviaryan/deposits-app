@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 import { get, put, del } from '../lib/ajax';
 import Authed from './Authed';
 import { updateLogin, updateUser, deleteUsers, unsetLogin } from '../actions/actions';
@@ -54,6 +53,7 @@ class User extends Authed {
 	}
 
 	deleteUser(){
+		// TODO: show a confirmation dialog
 		del(`users/${this.state.userID}`, this.props.login.token, (user) => {
 			console.log(user);
 			if (this.props.login.id === this.state.userID) {
@@ -72,12 +72,7 @@ class User extends Authed {
 			return super.unauthorized();
 		}
 		if (this.state.four04) {
-			return (
-				<div>
-					Either you don't have access to this resource or there seems to be nothing here.
-					But here's a <Link to="/">page</Link> that works.
-				</div>
-			)
+			return super.unauthorized();
 		}
 		if (this.state.deleted) {
 			return (
