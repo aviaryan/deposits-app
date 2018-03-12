@@ -10,4 +10,4 @@
 bugs
 
 - [ ] confirmation on delete
-- [ ] lag on homepage when logged in
+- [x] lag on homepage when logged in

@@ -18,13 +18,27 @@ class Welcome extends Component {
 		this.setState({ [attr]: e.target.value });
 	}
 
+	componentDidMount(){
+		this.checkLogin();
+	}
+
 	componentDidUpdate(){
+		this.checkLogin();
+	}
+
+	checkLogin(){
 		if (this.props.login) {
 			this.props.history.push('/deposits');
 		}
 	}
 
 	render(){
+		if (this.props.login) {
+			// no lag
+			return (
+				<div></div>
+			)
+		}
 		return (
 			<div>
 				<h2 className="uk-heading-primary">Welcome to Deposits!</h2>
