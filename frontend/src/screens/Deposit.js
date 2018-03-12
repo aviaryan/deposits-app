@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import { get, post, put, del } from '../lib/ajax';
 import Authed from './Authed';
 import { notify } from '../lib/notify';
+import { updateUsers } from '../actions/actions';
+import autocomplete from 'autocomplete.js';
 
 
 class Deposit extends Authed {
@@ -16,6 +18,7 @@ class Deposit extends Authed {
 		if (!this.props.match.params.depositID) {
 			this.setState({new: true});
 		} else {
+			// edit deposit case
 			this.setState({depositID: this.props.match.params.depositID});
 			get(`deposits/${this.props.match.params.depositID}`, this.props.login.token, (deposit) => {
 				console.log(deposit);
@@ -24,7 +27,34 @@ class Deposit extends Authed {
 				notify(xhr.responseJSON['message']);
 				this.setState({ four04: true });
 			});
+			// fetch the user list too
+			if (this.props.login.is_admin) {
+				autocomplete('#user-id-input', {}, {
+					displayKey: suggestion => suggestion.id + '',
+					source: this.queryUser.bind(this),
+					templates: {
+						suggestion: suggestion => suggestion.username + '(' + suggestion.id + ')'
+					}
+				});
+				get(`users`, this.props.login.token, (users) => {
+					this.props.updateUsers(users);
+				});
+			}
 		}
+	}
+
+	queryUser(query, cb){
+		// TODO: use actual server here
+		let results = [];
+		for (let id in this.props.users){
+			const user = this.props.users[id];
+			if (user.username.indexOf(query) > -1){
+				results.push(user);
+			} else if ((user.id + "").indexOf(query) > -1){
+				results.push(user);
+			}
+		}
+		cb(results);
 	}
 
 	saveRecord(){
@@ -37,6 +67,7 @@ class Deposit extends Authed {
 		});
 		if (this.props.login.is_admin && !this.state.new) {
 			pack['user_id'] = parseInt(this.state.user_id, 10);
+			// TODO: weird behavior with changing user here
 		}
 		if (this.state.new) {
 			post('deposits', pack, (deposit) => {
@@ -51,6 +82,8 @@ class Deposit extends Authed {
 			put(`deposits/${this.state.depositID}`, pack, this.props.login.token, (deposit) => {
 				console.log(deposit);
 				// TODO: flash a inline message now
+			}, (xhr) => {
+				notify(xhr.responseJSON['message']);
 			});
 		}
 	}
@@ -149,11 +182,8 @@ class Deposit extends Authed {
 						<div className="uk-margin">
 							<label className="uk-form-label" htmlFor="form-stacked-select">User</label>
 							<div className="uk-form-controls">
-								<select className="uk-select" id="form-stacked-select"
-									value={this.state.user_id} onChange={this.bind} data-bind="user_id" >
-									<option value="5">Normal</option>
-									<option value="6">Admin</option>
-								</select>
+								<input type="text" id="user-id-input" placeholder="Search by username..." className="uk-input"
+									value={this.state.user_id} onChange={this.bind} data-bind="user_id" />
 							</div>
 						</div>
 					}
@@ -172,8 +202,15 @@ class Deposit extends Authed {
 
 const mapStateToProps = state => {
 	return {
-		login: state.login
+		login: state.login,
+		users: state.users
 	}
 }
 
-export default connect(mapStateToProps, null)(Deposit);
+const mapDispatchToProps = dispatch => {
+	return {
+		updateUsers: users => dispatch(updateUsers(users))
+	}
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Deposit);

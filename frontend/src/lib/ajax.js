@@ -37,8 +37,8 @@ export function get(url, token, scb, ecb = null){
 	ajax('GET', url, scb, null, token, ecb);
 }
 
-export function put(url, body, token, scb){
-	ajax('PUT', url, scb, body, token);
+export function put(url, body, token, scb, ecb = null){
+	ajax('PUT', url, scb, body, token, ecb);
 }
 
 export function del(url, token, scb, ecb = null) {
