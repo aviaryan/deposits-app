@@ -6,6 +6,7 @@ from datetime import datetime
 EMAIL_REGEX = re.compile(r'\S+@\S+\.\S+')
 NOSPACE_REGEX = re.compile(r'^\S+$')
 PASS_REGEX = re.compile(r'.*(\S\d|\d\S).*')
+ALNUM_REGEX = re.compile(r'^[a-zA-Z0-9]*$')
 
 
 class CustomField(Raw):
@@ -25,6 +26,7 @@ class CustomField(Raw):
         self.maxx = kwargs.get('maxx')
         self.nospace = kwargs.get('nospace')
         self.passw = kwargs.get('passw')
+        self.alnum = kwargs.get('alnum')
 
     def format(self, value):
         """
@@ -106,6 +108,9 @@ class String(CustomField):
                 return False
             if self.passw and not PASS_REGEX.match(value):
                 self.validation_error = '%s should contain one non-numeric and one numeric character'
+                return False
+            if self.alnum and not ALNUM_REGEX.match(value):
+                self.validation_error = '%s should only contain alphanumeric characters'
                 return False
             return self.validate_min_max(len(value), ' characters in length')
         else:
