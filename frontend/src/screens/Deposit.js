@@ -5,6 +5,7 @@ import Authed from './Authed';
 import { notify } from '../lib/notify';
 import { updateUsers } from '../actions/actions';
 import autocomplete from 'autocomplete.js';
+import UIkit from 'uikit';
 
 
 class Deposit extends Authed {
@@ -87,12 +88,13 @@ class Deposit extends Authed {
 			});
 		}
 	}
-
 	deleteRecord(){
-		del(`deposits/${this.state.depositID}`, this.props.login.token, (deposit) => {
-			console.log(deposit);
-			this.setState({deleted: true});
-		});
+		UIkit.modal.confirm('Do you want to delete this deposit?').then(() => {
+			del(`deposits/${this.state.depositID}`, this.props.login.token, (deposit) => {
+				console.log(deposit);
+				this.setState({ deleted: true });
+			});
+		}, () => {});
 	}
 
 	render() {
@@ -190,7 +192,9 @@ class Deposit extends Authed {
 
 					<div uk-margin="true">
 						<button type="button" className="uk-button uk-button-primary" onClick={this.saveRecord.bind(this)}>SAVE</button>
+						{!this.state.new &&
 						<button type="button" className="uk-button uk-margin-left uk-button-danger" onClick={this.deleteRecord.bind(this)}>DELETE RECORD</button>
+						}
 					</div>
 
 				</form>
