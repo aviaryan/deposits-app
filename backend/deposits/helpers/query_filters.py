@@ -28,11 +28,11 @@ def apply_special_queries(query, specials):
 # DEFINE CUSTOM FILTERS BELOW
 
 def deposit_from(value, query):
-    return query.filter(Deposit.start_date >= Date().from_str_query(value))
+    return query.filter(Deposit.start_date >= Date().from_str(value))
 
 
 def deposit_to(value, query):
-    return query.filter(Deposit.start_date <= Date().from_str_query(value, True))
+    return query.filter(Deposit.start_date <= Date().from_str(value))
 
 
 def deposit_min(value, query):

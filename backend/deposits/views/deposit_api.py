@@ -1,6 +1,7 @@
 from flask_restplus import Namespace, Resource, reqparse
 from flask_login import login_required
 from flask import g
+from datetime import datetime
 
 from deposits.models.deposit_model import Deposit as DepositModel
 
@@ -43,9 +44,11 @@ class DepositDAO(BaseDAO):
         return data['user_id']
 
     def full_check(self, data):
+        start = fields.Date().from_str(data['start_date'])
+        if start > datetime.now():
+            raise ValidationError('start_date', 'Start date should be today or some date before that')
         if not data.get('end_date'):
             pass
-        start = fields.Date().from_str(data['start_date'])
         end = fields.Date().from_str(data['end_date'])
         if end < start:
             raise ValidationError('end_date', 'End date is less than start date')
@@ -66,6 +69,7 @@ DEPOSIT_PARAMS = {
         'description': 'Order by a field, example "start_date.desc" or "bank.asc"'
     },
     'bank': {},
+    'user_id': {},
     'min_savings': {
         'description': 'Deposits done with minimum this amount'
     },
@@ -83,6 +87,7 @@ class DepositResource():
     deposit_parser.add_argument('to_date', type=str, dest='__deposit_to')
     deposit_parser.add_argument('order_by', type=str, dest='__deposit_order_by')
     deposit_parser.add_argument('bank', type=str)
+    deposit_parser.add_argument('user_id', type=int)
     deposit_parser.add_argument('min_savings', type=float, dest='__deposit_min')
     deposit_parser.add_argument('max_savings', type=float, dest='__deposit_max')
     # TODO: check this float thing

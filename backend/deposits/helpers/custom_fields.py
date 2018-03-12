@@ -44,16 +44,6 @@ class CustomField(Raw):
         else:
             return value
 
-    def validate_empty(self):
-        """
-        Return when value is empty or null
-        """
-        if self.required:
-            self.validation_error = 'Required field %s. Cannot be null or empty'
-            return False
-        else:
-            return True
-
     def validate_min_max(self, value, apd=''):
         """
         validates against min/max setting
@@ -88,7 +78,7 @@ class Email(CustomField):
 
     def validate(self, value):
         if not value:
-            return self.validate_empty()
+            return True
         if not EMAIL_REGEX.match(value):
             self.validation_error = 'Invalid email address in %s'
             return False
@@ -101,7 +91,7 @@ class String(CustomField):
     """
     def validate(self, value):
         if not value:
-            return self.validate_empty()
+            return True
         if value.__class__.__name__ in ['unicode', 'str']:
             if self.nospace and not NOSPACE_REGEX.match(value):
                 self.validation_error = '%s should not contain space or whitespace characters'
@@ -130,7 +120,7 @@ class Integer(CustomField):
 
     def validate(self, value):
         if value is None:
-            return self.validate_empty()
+            return True
         if type(value) != int:
             self.validation_error = '%s should be an Integer'
             return False
@@ -147,7 +137,7 @@ class Float(CustomField):
 
     def validate(self, value):
         if value is None:
-            return self.validate_empty()
+            return True
         try:
             float(value)
             return self.validate_min_max(value)
@@ -186,28 +176,18 @@ class Date(CustomField):
         # value = value.replace(' ', 'T', 1)
         return datetime.strptime(value, self.dt_format)
 
-    def from_str_query(self, value, end=False):
-        if end:
-            return self.from_str(value + 'T23:59:59')
-        else:
-            return self.from_str(value + 'T00:00:00')
+    # def from_str_query(self, value, end=False):
+    #     if end:
+    #         return self.from_str(value + 'T23:59:59')
+    #     else:
+    #         return self.from_str(value + 'T00:00:00')
 
     def format(self, value):
         return self.to_str(value)
 
-    def validate_empty(self):
-        """
-        Return when value is empty or null
-        """
-        if self.required:
-            self.validation_error = 'Required field %s. Cannot be null or empty'
-            return False
-        else:
-            return True
-
     def validate(self, value):
         if not value:
-            return self.validate_empty()
+            return True
         try:
             if value.__class__.__name__ in ['unicode', 'str']:
                 self.from_str(value)

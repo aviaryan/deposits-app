@@ -39,10 +39,10 @@ def validate_payload(payload, api_model, check_required=True):
                     field=key,
                     message='Required field \'{}\' missing'.format(key))
             # another case (empty values)
-            if api_model[key].required and not payload[key]:
+            if api_model[key].required and ((payload[key] == '') or (payload[key] is None)):
                 raise ValidationError(
                     field=key,
-                    message='Required field \'{}\' empty'.format(key))
+                    message='Required field \'{}\' is null or empty'.format(key))
     # check payload
     for key in payload:
         field = api_model[key]
