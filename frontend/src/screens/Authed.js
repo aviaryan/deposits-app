@@ -10,6 +10,12 @@ class Authed extends Component {
 		}
 		// init empty state, avoids doing it again and again
 		this.state = {};
+		this.bind = this.bind.bind(this);
+	}
+
+	bind(e) {
+		let attr = e.target.getAttribute('data-bind');
+		this.setState({ [attr]: (e.target.getAttribute('type') === 'checkbox') ? !this.state[attr] : e.target.value });
 	}
 
 	shouldComponentUpdate(np, ns) {

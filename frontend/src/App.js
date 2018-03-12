@@ -15,6 +15,7 @@ import User from './screens/User';
 import UserList from './screens/UserList';
 import SignUp from './screens/SignUp';
 import Verify from './screens/Verify';
+import Deposit from './screens/Deposit';
 
 
 class App extends Component {
@@ -56,6 +57,8 @@ class App extends Component {
 							<Route exact path='/profile' component={User} />
 							<Route exact path='/users' component={UserList} />
 							<Route exact path='/verify' component={Verify} />
+							<Route exact path="/deposits/new" component={Deposit} />
+							<Route exact path="/deposits/:depositID" component={Deposit} />
 						</Switch></div>
 					</div>
 				</Router>

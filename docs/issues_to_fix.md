@@ -5,3 +5,9 @@
 - [ ] fine tune is_verified
 - [ ] front-end validation
 - [ ] list of banks
+
+
+bugs
+
+- [ ] confirmation on delete
+- [ ] lag on homepage when logged in

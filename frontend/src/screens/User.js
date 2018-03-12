@@ -10,7 +10,6 @@ class User extends Authed {
 	constructor(props){
 		super(props);
 		this.state = { email: '', full_name: '', username: '', is_admin: '', is_manager: '' };
-		this.bind = this.bind.bind(this);
 	}
 
 	componentDidMount(){
@@ -31,11 +30,6 @@ class User extends Authed {
 			notify(xhr.responseJSON['message']);
 			this.setState({four04: true});
 		});
-	}
-
-	bind(e) {
-		let attr = e.target.getAttribute('data-bind');
-		this.setState({ [attr]: (e.target.getAttribute('type') === 'checkbox') ? !this.state[attr] : e.target.value });
 	}
 
 	updateUser(){
@@ -179,14 +173,11 @@ const mapDispatchToProps = dispatch => {
 	return {
 		updateUserStore: (user, own=false) => {
 			if (own) {
-				console.log('own');
 				dispatch(updateLogin(user));
 			}
 			dispatch(updateUser(user));
 		},
-		deleteUserStore: (user) => {
-			dispatch(deleteUsers([user]));
-		},
+		deleteUserStore: user => dispatch(deleteUsers([user])),
 		logOut: () => dispatch(unsetLogin())
 	}
 }

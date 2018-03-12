@@ -17,7 +17,7 @@ api = Namespace('deposits', description='Deposits', path='/')
 DEPOSIT = api.model('Deposit', {
     'id': fields.Integer(required=True),
     'bank': fields.String(required=True),
-    'account': fields.String(required=True, min=11, max=20),
+    'account': fields.String(required=True, min=11, max=20),  # TODO: only alphanumeric
     'savings': fields.Float(required=True, minx=0.0),
     'start_date': fields.Date(required=True),
     'end_date': fields.Date(required=False),
