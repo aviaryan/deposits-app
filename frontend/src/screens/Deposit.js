@@ -8,7 +8,8 @@ import { notify } from '../lib/notify';
 class Deposit extends Authed {
 	constructor(props){
 		super(props);
-		this.state = { bank: '', account: '', savings: 0, start_date: '', end_date: '', interest_rate: 0, tax_rate: 0, user_id: 0 };
+		this.state = { bank: '', account: '', savings: 0, start_date: (new Date()).toISOString().substr(0, 10),
+			end_date: '', interest_rate: 0, tax_rate: 0, user_id: 0 };
 	}
 
 	componentDidMount(){
@@ -113,17 +114,17 @@ class Deposit extends Authed {
 					</div>
 
 					<div className="uk-margin">
-						<label className="uk-form-label" htmlFor="interest">Interest Rate</label>
+						<label className="uk-form-label" htmlFor="interest">Interest Rate (%)</label>
 						<div className="uk-form-controls">
-							<input className="uk-input" id="interest" type="number" placeholder="8.5" step="0.5"
+							<input className="uk-input" id="interest" type="number" step="0.5"
 								value={this.state.interest_rate} onChange={this.bind} data-bind="interest_rate" />
 						</div>
 					</div>
 
 					<div className="uk-margin">
-						<label className="uk-form-label" htmlFor="tax">Tax Rate</label>
+						<label className="uk-form-label" htmlFor="tax">Tax Rate (%)</label>
 						<div className="uk-form-controls">
-							<input className="uk-input" id="tax" type="number" placeholder="20" step="0.5"
+							<input className="uk-input" id="tax" type="number" step="0.5"
 								value={this.state.tax_rate} onChange={this.bind} data-bind="tax_rate" />
 						</div>
 					</div>
@@ -131,7 +132,7 @@ class Deposit extends Authed {
 					<div className="uk-margin">
 						<label className="uk-form-label" htmlFor="start">Start Date</label>
 						<div className="uk-form-controls">
-							<input className="uk-input" id="start" type="date" placeholder=""
+							<input className="uk-input" id="start" type="date"
 								value={this.state.start_date} onChange={this.bind} data-bind="start_date" />
 						</div>
 					</div>
@@ -139,7 +140,7 @@ class Deposit extends Authed {
 					<div className="uk-margin">
 						<label className="uk-form-label" htmlFor="end">End Date</label>
 						<div className="uk-form-controls">
-							<input className="uk-input" id="end" type="date" placeholder=""
+							<input className="uk-input" id="end" type="date"
 								value={this.state.end_date} onChange={this.bind} data-bind="end_date" />
 						</div>
 					</div>
