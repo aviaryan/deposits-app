@@ -9,6 +9,9 @@ export default function login(state = {}, action) {
 			let user = action.user
 			if (state.hasOwnProperty(user.id)) {
 				state[user.id] = { ...state[user.id], ...user }
+			} else {
+				// sorted automatically cause higher ID
+				state[user.id] = user
 			}
 			return state
 		default:

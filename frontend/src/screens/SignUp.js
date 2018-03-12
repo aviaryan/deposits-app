@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 // import jquery from 'jquery';
 import { post } from '../lib/ajax';
 import { notify } from '../lib/notify';
+import { updateUser } from '../actions/actions';
 // import { setLogin } from '../actions/actions';
 // import { notify } from '../lib/notify';
 
@@ -120,6 +121,8 @@ const mapDispatchToProps = dispatch => {
 			// post
 			post('users', user, (res) => {
 				console.log(res);
+				// store it in store
+				dispatch(updateUser(res));
 				// successful creation callback
 				cb();
 			}, (xhr) => {
