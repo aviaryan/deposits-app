@@ -40,3 +40,7 @@ export function get(url, token, scb, ecb = null){
 export function put(url, body, token, scb){
 	ajax('PUT', url, scb, body, token);
 }
+
+export function del(url, token, scb, ecb = null) {
+	ajax('DELETE', url, scb, null, token, ecb);
+}

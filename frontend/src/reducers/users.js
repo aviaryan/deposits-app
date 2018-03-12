@@ -1,4 +1,4 @@
-import { UPDATE_USERS, UPDATE_USER } from '../actions/actions'
+import { UPDATE_USERS, UPDATE_USER, DELETE_USERS } from '../actions/actions'
 import { sortOnKeys } from '../lib/utils'
 
 export default function login(state = {}, action) {
@@ -13,6 +13,14 @@ export default function login(state = {}, action) {
 				// sorted automatically cause higher ID
 				state[user.id] = user
 			}
+			return state
+		case DELETE_USERS:
+			let users = action.users
+			users.forEach((user) => {
+				if (state.hasOwnProperty(user.id)){
+					delete state[user.id]
+				}
+			})
 			return state
 		default:
 			return state

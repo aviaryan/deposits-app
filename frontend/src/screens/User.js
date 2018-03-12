@@ -1,8 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { get, put } from '../lib/ajax';
+import { Link } from 'react-router-dom';
+import { get, put, del } from '../lib/ajax';
 import Authed from './Authed';
-import { updateLogin, updateUser } from '../actions/actions';
+import { updateLogin, updateUser, deleteUsers, unsetLogin } from '../actions/actions';
+import { notify } from '../lib/notify';
 
 
 class User extends Authed {
@@ -21,10 +23,14 @@ class User extends Authed {
 		if (!userID){
 			return;
 		}
-		this.setState({userID: userID});
+		this.setState({userID: parseInt(userID, 10)});
+		// ^ userID is string
 		get(`users/${userID}`, this.props.login.token, (user) => {
 			console.log(user);
 			this.setState(user);
+		}, (xhr) => {
+			notify(xhr.responseJSON['message']);
+			this.setState({four04: true});
 		});
 	}
 
@@ -43,15 +49,43 @@ class User extends Authed {
 		};
 		put(`users/${this.state.userID}`, pack, this.props.login.token, (res) => {
 			console.log(res);
-			if (this.props.login.id === this.state.userID){
-				this.props.updateUserStore(pack);
-			}
+			this.props.updateUserStore(pack, this.props.login.id === this.state.userID);
 		});
+	}
+
+	deleteUser(){
+		del(`users/${this.state.userID}`, this.props.login.token, (user) => {
+			console.log(user);
+			if (this.props.login.id === this.state.userID) {
+				// same user
+				notify('Your account has been deleted. You have been logged out.');
+				this.props.logOut();
+			} else {
+				this.setState({ deleted: true });
+			}
+			this.props.deleteUserStore(user);
+		})
 	}
 
 	render() {
 		if (!this.props.login) {
 			return super.unauthorized();
+		}
+		if (this.state.four04) {
+			return (
+				<div>
+					Either you don't have access to this resource or there seems to be nothing here.
+					But here's a <Link to="/">page</Link> that works.
+				</div>
+			)
+		}
+		if (this.state.deleted) {
+			return (
+				<div>
+					Account deleted.
+					Click <a onClick={() => this.props.history.goBack()}>here</a> to go back to the previous page.
+				</div>
+			)
 		}
 		if (!this.state.email) {
 			return (
@@ -97,7 +131,10 @@ class User extends Authed {
        		</div>
 					: ""}
 
+					<div uk-margin="true">
 					<button type="button" className="uk-button uk-button-primary" onClick={this.updateUser.bind(this)}>SAVE</button>
+					<button type="button" className="uk-button uk-margin-left uk-button-danger" onClick={this.deleteUser.bind(this)}>DELETE ACCOUNT</button>
+					</div>
 
 				</form>
 
@@ -145,10 +182,17 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
 	return {
-		updateUserStore: (user) => {
-			dispatch(updateLogin(user));
+		updateUserStore: (user, own=false) => {
+			if (own) {
+				console.log('own');
+				dispatch(updateLogin(user));
+			}
 			dispatch(updateUser(user));
-		}
+		},
+		deleteUserStore: (user) => {
+			dispatch(deleteUsers([user]));
+		},
+		logOut: () => dispatch(unsetLogin())
 	}
 }
 
