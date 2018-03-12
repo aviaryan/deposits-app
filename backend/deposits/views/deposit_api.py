@@ -21,7 +21,7 @@ DEPOSIT = api.model('Deposit', {
     'savings': fields.Float(required=True, minx=0.0),
     'start_date': fields.Date(required=True),
     'end_date': fields.Date(required=False),
-    'interest_rate': fields.Float(required=True, min=-100.0),
+    'interest_rate': fields.Float(required=True),
     'tax_rate': fields.Float(required=True, min=0.0, max=100.0),
     'user_id': fields.Integer(min=1)  # for admin assign stuff
 })
