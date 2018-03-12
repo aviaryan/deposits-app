@@ -10,7 +10,7 @@ import { unsetLogin } from './actions/actions';
 // import logo from './logo.svg';
 import './App.css';
 import Welcome from './screens/Welcome';
-import Deposits from './screens/Deposits';
+import DepositList from './screens/DepositList';
 import User from './screens/User';
 import UserList from './screens/UserList';
 import SignUp from './screens/SignUp';
@@ -49,7 +49,7 @@ class App extends Component {
 
 						<div className="uk-container"><Switch>
 							<Route exact path='/' component={Welcome} />
-							<Route exact path='/deposits' component={Deposits} />
+							<Route exact path='/deposits' component={DepositList} />
 							<Route exact path='/users/new' component={SignUp} />
 							<Route exact path='/signup' component={SignUp} />
 							<Route path='/users/:userID' component={User} />

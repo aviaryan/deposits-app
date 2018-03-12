@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import Authed from './Authed';
 
 
-class Deposits extends Authed {
+class DepositList extends Authed {
 	render() {
 		if (!this.props.login){
 			return super.unauthorized();
@@ -23,4 +23,4 @@ const mapStateToProps = state => {
 	}
 }
 
-export default connect(mapStateToProps, null)(Deposits);
+export default connect(mapStateToProps, null)(DepositList);
