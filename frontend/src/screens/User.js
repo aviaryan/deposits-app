@@ -4,6 +4,7 @@ import { get, put, del } from '../lib/ajax';
 import Authed from './Authed';
 import { updateLogin, updateUser, deleteUsers, unsetLogin } from '../actions/actions';
 import { notify } from '../lib/notify';
+import UIkit from 'uikit';
 
 
 class User extends Authed {
@@ -48,17 +49,19 @@ class User extends Authed {
 
 	deleteUser(){
 		// TODO: show a confirmation dialog
-		del(`users/${this.state.userID}`, this.props.login.token, (user) => {
-			console.log(user);
-			if (this.props.login.id === this.state.userID) {
-				// same user
-				notify('Your account has been deleted. You have been logged out.');
-				this.props.logOut();
-			} else {
-				this.setState({ deleted: true });
-			}
-			this.props.deleteUserStore(user);
-		})
+		UIkit.modal.confirm('Do you want to delete this account?').then(() => {
+			del(`users/${this.state.userID}`, this.props.login.token, (user) => {
+				console.log(user);
+				if (this.props.login.id === this.state.userID) {
+					// same user
+					notify('Your account has been deleted. You have been logged out.');
+					this.props.logOut();
+				} else {
+					this.setState({ deleted: true });
+				}
+				this.props.deleteUserStore(user);
+			});
+		}, () => {});
 	}
 
 	render() {

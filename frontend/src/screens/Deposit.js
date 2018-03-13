@@ -90,6 +90,7 @@ class Deposit extends Authed {
 			});
 		}
 	}
+
 	deleteRecord(){
 		UIkit.modal.confirm('Do you want to delete this deposit?').then(() => {
 			del(`deposits/${this.state.depositID}`, this.props.login.token, (deposit) => {
