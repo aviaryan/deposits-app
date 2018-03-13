@@ -67,8 +67,10 @@ class Deposit extends Authed {
 			pack[key] = parseFloat(this.state[key]);
 		});
 		if (this.props.login.is_admin && !this.state.new) {
-			pack['user_id'] = parseInt(this.state.user_id, 10);
-			// TODO: weird behavior with changing user here
+			// let temp = this.state.user_id;
+			let temp = document.getElementById('user-id-input').value;
+			// faces issues with race condition of autocomplete library
+			pack['user_id'] = parseInt(temp, 10);
 		}
 		if (this.state.new) {
 			post('deposits', pack, (deposit) => {
@@ -81,7 +83,7 @@ class Deposit extends Authed {
 			}, this.props.login.token);
 		} else {
 			put(`deposits/${this.state.depositID}`, pack, this.props.login.token, (deposit) => {
-				console.log(deposit);
+				console.log(deposit, pack);
 				// TODO: flash a inline message now
 			}, (xhr) => {
 				notify(xhr.responseJSON['message']);
