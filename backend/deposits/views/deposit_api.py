@@ -44,11 +44,13 @@ class DepositDAO(BaseDAO):
         return data['user_id']
 
     def full_check(self, data):
+        if not data.get('start_date'):
+            return  # happens in case of update request
         start = fields.Date().from_str(data['start_date'])
         if start > datetime.now():
             raise ValidationError('start_date', 'Start date should be today or some date before that')
         if not data.get('end_date'):
-            pass
+            return
         end = fields.Date().from_str(data['end_date'])
         if end < start:
             raise ValidationError('end_date', 'End date is less than start date')

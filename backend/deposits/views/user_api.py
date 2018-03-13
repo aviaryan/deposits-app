@@ -1,6 +1,6 @@
 from flask_restplus import Namespace, Resource
 from flask_login import login_required
-from flask import g, request
+from flask import g, request, current_app
 
 from deposits.models.user_model import User as UserModel
 
@@ -37,6 +37,9 @@ del USER_PUT['is_verified']
 
 class UserDAO(BaseDAO):
     def create(self, data):
+        # if testing, verified already
+        if current_app.config['TESTING']:
+            data['is_verified'] = True
         # validate
         data = self.validate(data)
         # set password
