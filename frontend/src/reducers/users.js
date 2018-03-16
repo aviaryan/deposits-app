@@ -1,4 +1,4 @@
-import { SET_USERS, UPDATE_USER, DELETE_USERS } from '../actions/actions'
+import { SET_USERS, UPDATE_USER, DELETE_USERS, CLEAR } from '../actions/actions'
 import { sortOnKeys, makeDict, pageState } from '../lib/utils'
 
 export default function users(state = pageState, action) {
@@ -23,6 +23,8 @@ export default function users(state = pageState, action) {
 				}
 			})
 			return state
+		case CLEAR:
+			return pageState
 		default:
 			return state
 	}

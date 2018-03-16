@@ -1,4 +1,4 @@
-import { SET_DEPOSITS, UPDATE_DEPOSIT, DELETE_DEPOSITS } from '../actions/actions'
+import { SET_DEPOSITS, UPDATE_DEPOSIT, DELETE_DEPOSITS, CLEAR } from '../actions/actions'
 import { sortOnKeys, makeDict, pageState } from '../lib/utils'
 
 export default function deposits(state = pageState, action) {
@@ -23,6 +23,8 @@ export default function deposits(state = pageState, action) {
 				}
 			})
 			return state
+		case CLEAR:
+			return pageState
 		default:
 			return state
 	}

@@ -7,6 +7,7 @@ export const DELETE_USERS = 'DELETE_USERS'
 export const SET_DEPOSITS = 'SET_DEPOSITS'
 export const UPDATE_DEPOSIT = 'UPDATE_DEPOSIT'
 export const DELETE_DEPOSITS = 'DELETE_DEPOSITS'
+export const CLEAR = 'CLEAR'
 
 export function setLogin(user, token){
 	return {
@@ -68,5 +69,11 @@ export function deleteDeposits(deposits) {
 	return {
 		type: DELETE_DEPOSITS,
 		deposits: deposits
+	}
+}
+
+export function clear() {
+	return {
+		type: CLEAR
 	}
 }

@@ -6,7 +6,7 @@ import {
 	Switch
 } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { unsetLogin } from './actions/actions';
+import { unsetLogin, clear } from './actions/actions';
 // import logo from './logo.svg';
 import './App.css';
 import Welcome from './screens/Welcome';
@@ -78,6 +78,7 @@ const mapDispatchToProps = dispatch => {
 	return {
 		onLogout: () => {
 			dispatch(unsetLogin());
+			dispatch(clear());
 		}
 	}
 }
