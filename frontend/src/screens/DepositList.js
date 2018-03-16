@@ -8,7 +8,32 @@ import { setDeposits } from '../actions/actions';
 
 class DepositList extends Authed {
 	componentDidMount(){
-		get(`deposits`, this.props.login.token, (deposits) => {
+		// get if others page or own
+		let userID = this.props.match.params.userID ?
+			this.props.match.params.userID :
+			(this.props.login ? this.props.login.id : null);
+		if (!userID) {
+			return;
+		} else {
+			userID = parseInt(userID, 10);
+		}
+		// find deposit page status
+		let otherUser = false;
+		if (this.props.login.id !== userID) {
+			if (this.props.login.is_admin) {
+				otherUser = true;
+				this.setState({ otherUserID: userID });
+				get(`users/${userID}`, this.props.login.token, (user) => {
+					this.setState({ otherUser: user });
+				});
+			} else {
+				this.setState({ four04: true });
+				return;
+			}
+		}
+		// fetch deposits for that user
+		let url = (otherUser) ? `deposits/all?user_id=${userID}` : `deposits`;
+		get(url, this.props.login.token, (deposits) => {
 			console.log(deposits);
 			this.props.setDeposits(deposits);
 		});
@@ -16,6 +41,9 @@ class DepositList extends Authed {
 
 	render() {
 		if (!this.props.login){
+			return super.unauthorized();
+		}
+		if (this.state.four04) {
 			return super.unauthorized();
 		}
 		if (!this.props.deposits) {
@@ -49,8 +77,8 @@ class DepositList extends Authed {
 		return (
 			<div>
 				<div>
+					<h4>Deposits by {this.state.otherUser ? this.state.otherUser.username : "me"}</h4>
 					<Link to="/deposits/new"><button className="uk-button uk-button-primary">NEW DEPOSIT</button></Link>
-					Deposits by {this.props.login.username}.
 				</div>
 				<table className="uk-table uk-table-hover uk-table-middle uk-table-divider uk-table-striped uk-table-hover">
 					<thead>

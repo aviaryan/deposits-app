@@ -12,6 +12,7 @@ bugs
 
 - [x] confirmation on delete
 - [x] lag on homepage when logged in
+- [ ] end date null from UI
 
 
 thoughts

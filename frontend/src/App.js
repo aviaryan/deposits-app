@@ -53,6 +53,7 @@ class App extends Component {
 							<Route exact path='/deposits' component={DepositList} />
 							<Route exact path='/users/new' component={SignUp} />
 							<Route exact path='/signup' component={SignUp} />
+							<Route exact path='/users/:userID/deposits' component={DepositList} />
 							<Route path='/users/:userID' component={User} />
 							<Route exact path='/profile' component={User} />
 							<Route exact path='/users' component={UserList} />

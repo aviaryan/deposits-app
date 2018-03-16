@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { get, put, del } from '../lib/ajax';
 import Authed from './Authed';
 import { updateLogin, updateUser, deleteUsers, unsetLogin } from '../actions/actions';
@@ -126,6 +127,11 @@ class User extends Authed {
 					<div uk-margin="true">
 					<button type="button" className="uk-button uk-button-primary" onClick={this.updateUser.bind(this)}>SAVE</button>
 					<button type="button" className="uk-button uk-margin-left uk-button-danger" onClick={this.deleteUser.bind(this)}>DELETE ACCOUNT</button>
+					<Link to={`/users/${this.state.userID}/deposits/`}>
+						<button type="button" className="uk-button uk-margin-left uk-button-secondary">
+							View deposits
+						</button>
+					</Link>
 					</div>
 
 				</form>
