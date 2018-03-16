@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { get } from '../lib/ajax';
 import { Link } from 'react-router-dom';
 import Authed from './Authed';
-import { updateUsers } from '../actions/actions';
+import { setUsers } from '../actions/actions';
 
 
 class UserList extends Authed {
@@ -13,7 +13,7 @@ class UserList extends Authed {
 		}
 		get(`users`, this.props.login.token, (users) => {
 			console.log(users);
-			this.props.updateUsers(users);
+			this.props.setUsers(users);
 		});
 	}
 
@@ -83,7 +83,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
 	return {
-		updateUsers: users => dispatch(updateUsers(users))
+		setUsers: users => dispatch(setUsers(users))
 	}
 }
 

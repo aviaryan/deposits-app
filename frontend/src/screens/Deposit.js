@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { get, post, put, del } from '../lib/ajax';
 import Authed from './Authed';
 import { notify } from '../lib/notify';
-import { updateUsers } from '../actions/actions';
+import { setUsers } from '../actions/actions';
 import autocomplete from 'autocomplete.js';
 import UIkit from 'uikit';
 
@@ -38,7 +38,7 @@ class Deposit extends Authed {
 					}
 				});
 				get(`users`, this.props.login.token, (users) => {
-					this.props.updateUsers(users);
+					this.props.setUsers(users);
 				});
 			}
 		}
@@ -216,7 +216,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
 	return {
-		updateUsers: users => dispatch(updateUsers(users))
+		setUsers: users => dispatch(setUsers(users))
 	}
 }
 

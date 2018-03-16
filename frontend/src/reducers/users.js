@@ -1,9 +1,9 @@
-import { UPDATE_USERS, UPDATE_USER, DELETE_USERS } from '../actions/actions'
+import { SET_USERS, UPDATE_USER, DELETE_USERS } from '../actions/actions'
 import { sortOnKeys, makeDict } from '../lib/utils'
 
 export default function users(state = {}, action) {
 	switch (action.type) {
-		case UPDATE_USERS:
+		case SET_USERS:
 			return sortOnKeys(makeDict(action.users))
 		case UPDATE_USER:
 			let user = action.user
