@@ -49,7 +49,6 @@ class User extends Authed {
 	}
 
 	deleteUser(){
-		// TODO: show a confirmation dialog
 		UIkit.modal.confirm('Do you want to delete this account?').then(() => {
 			del(`users/${this.state.userID}`, this.props.login.token, (user) => {
 				console.log(user);

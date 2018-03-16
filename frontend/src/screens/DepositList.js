@@ -32,10 +32,31 @@ class DepositList extends Authed {
 			}
 		}
 		// fetch deposits for that user
-		let url = (otherUser) ? `deposits/all?user_id=${userID}` : `deposits`;
-		get(url, this.props.login.token, (deposits) => {
-			console.log(deposits);
-			this.props.setDeposits(deposits['results']);  // TODO: fix
+		this.movePage(0, otherUser, userID);
+	}
+
+	movePage(dir, otherUser = null, userID = null) {
+		let start = this.props.deposits.start;
+		if (dir === 1) {
+			start += this.props.deposits.limit;
+		} else if (dir === -1) {
+			start -= this.props.deposits.limit;
+		}
+		// cuz setState doesn't work quickly
+		if (otherUser === null) {
+			otherUser = this.state.otherUser;
+		}
+		if (otherUser && userID === null) {
+			// not needed otherwise
+			userID = this.state.otherUser.id;
+		}
+		// fetch
+		let url = otherUser ? `deposits/all?user_id=${userID}&` : `deposits?`;
+		get(url + `start=${start}&limit=${this.props.deposits.limit}`, this.props.login.token, (result) => {
+			console.log(result);
+			this.frontBtn.disabled = (!result['next']);
+			this.backBtn.disabled = (!result['previous']);
+			this.props.setDeposits(result);
 		});
 	}
 
@@ -54,9 +75,9 @@ class DepositList extends Authed {
 
 		// get deposits
 		let deposits = [];
-		for (let id in this.props.deposits) {
-			if (this.props.deposits.hasOwnProperty(id)) {
-				const deposit = this.props.deposits[id];
+		for (let id in this.props.deposits.results) {
+			if (this.props.deposits.results.hasOwnProperty(id)) {
+				const deposit = this.props.deposits.results[id];
 				deposits.push(
 					<tr key={id} className="hover-pointer"
 						onClick={() => this.props.history.push(`/deposits/${deposit.id}`)}>
@@ -78,8 +99,23 @@ class DepositList extends Authed {
 			<div>
 				<div>
 					<h4>Deposits by {this.state.otherUser ? this.state.otherUser.username : "me"}</h4>
-					<Link to="/deposits/new"><button className="uk-button uk-button-primary">NEW DEPOSIT</button></Link>
 				</div>
+
+				<div>
+					<div className="uk-inline-block">
+						<Link to="/deposits/new"><button className="uk-button uk-button-primary">NEW DEPOSIT</button></Link>
+					</div>
+					<div className="uk-inline-block uk-float-right">
+						<b>{this.props.deposits.start}</b>－<b>{Math.min(this.props.deposits.start + this.props.deposits.limit - 1, this.props.deposits.count)}
+						</b> of <b>{this.props.deposits.count}</b>
+						<button className="uk-button uk-button-default uk-button-small uk-margin-left"
+							ref={btn => this.backBtn = btn} onClick={() => this.movePage(-1)}>◀</button>
+						<button className="uk-button uk-button-default uk-button-small"
+							ref={btn => this.frontBtn = btn} onClick={() => this.movePage(1)}>▶</button>
+					</div>
+				</div>
+				<hr />
+
 				<table className="uk-table uk-table-hover uk-table-middle uk-table-divider uk-table-striped uk-table-hover">
 					<thead>
 						<tr>
@@ -112,7 +148,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
 	return {
-		setDeposits: deposits => dispatch(setDeposits(deposits))
+		setDeposits: result => dispatch(setDeposits(result))
 	}
 }
 

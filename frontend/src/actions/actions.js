@@ -29,10 +29,10 @@ export function updateLogin(user){
 	}
 }
 
-export function setUsers(users){
+export function setUsers(response){
 	return {
 		type: SET_USERS,
-		users: users
+		response: response
 	}
 }
 
@@ -50,10 +50,10 @@ export function deleteUsers(users) {
 	}
 }
 
-export function setDeposits(deposits) {
+export function setDeposits(response) {
 	return {
 		type: SET_DEPOSITS,
-		deposits: deposits
+		response: response
 	}
 }
 

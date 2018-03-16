@@ -11,9 +11,21 @@ class UserList extends Authed {
 		if (!this.props.login) {
 			return;  // new page case
 		}
-		get(`users`, this.props.login.token, (users) => {
-			console.log(users);
-			this.props.setUsers(users['results']);  // TODO: fix
+		this.movePage(0);
+	}
+
+	movePage(dir) {
+		let start = this.props.users.start;
+		if (dir === 1) {
+			start += this.props.users.limit;
+		} else if (dir === -1) {
+			start -= this.props.users.limit;
+		}
+		get(`users?start=${start}&limit=${this.props.users.limit}`, this.props.login.token, (result) => {
+			console.log(result);
+			this.frontBtn.disabled = (!result['next']);
+			this.backBtn.disabled = (!result['previous']);
+			this.props.setUsers(result);
 		});
 	}
 
@@ -31,9 +43,9 @@ class UserList extends Authed {
 		}
 		// get users
 		let users = [];
-		for (let id in this.props.users) {
-			if (this.props.users.hasOwnProperty(id)) {
-				const user = this.props.users[id];
+		for (let id in this.props.users.results) {
+			if (this.props.users.results.hasOwnProperty(id)) {
+				const user = this.props.users.results[id];
 				users.push(
 					<tr key={id} className="hover-pointer"
 						onClick={() => this.props.history.push(`/users/${user.id}`)}>
@@ -52,8 +64,20 @@ class UserList extends Authed {
 		return (
 			<div className="uk-overflow-auto">
 				<div>
-					<Link to="/users/new"><button className="uk-button uk-button-primary">NEW USER</button></Link>
+					<div className="uk-inline-block">
+						<Link to="/users/new"><button className="uk-button uk-button-primary">NEW USER</button></Link>
+					</div>
+					<div className="uk-inline-block uk-float-right">
+						<b>{this.props.users.start}</b>－<b>{Math.min(this.props.users.start + this.props.users.limit - 1, this.props.users.count)}
+							</b> of <b>{this.props.users.count}</b>
+						<button className="uk-button uk-button-default uk-button-small uk-margin-left"
+							ref={btn => this.backBtn = btn} onClick={() => this.movePage(-1)}>◀</button>
+						<button className="uk-button uk-button-default uk-button-small"
+							ref={btn => this.frontBtn = btn} onClick={() => this.movePage(1)}>▶</button>
+					</div>
 				</div>
+				<hr />
+
 				<table className="uk-table uk-table-hover uk-table-middle uk-table-divider uk-table-striped uk-table-hover">
 					<thead>
 						<tr>
@@ -83,7 +107,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
 	return {
-		setUsers: users => dispatch(setUsers(users))
+		setUsers: (result) => dispatch(setUsers(result))
 	}
 }
 
