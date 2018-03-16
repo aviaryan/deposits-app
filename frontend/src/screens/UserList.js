@@ -7,12 +7,6 @@ import { updateUsers } from '../actions/actions';
 
 
 class UserList extends Authed {
-	// constructor(props) {
-	// 	super(props);
-	// 	// this.state = { email: '', full_name: '', username: '', is_admin: '', is_manager: '' };
-	// 	// this.bind = this.bind.bind(this);
-	// }
-
 	componentDidMount() {
 		if (!this.props.login) {
 			return;  // new page case
@@ -21,27 +15,6 @@ class UserList extends Authed {
 			console.log(users);
 			this.props.updateUsers(users);
 		});
-	}
-
-	// bind(e) {
-	// 	let attr = e.target.getAttribute('data-bind');
-	// 	this.setState({ [attr]: e.target.value });
-	// }
-
-	updateUser() {
-		// let pack = {
-		// 	email: this.state.email,
-		// 	username: this.state.username,
-		// 	full_name: this.state.full_name,
-		// 	is_admin: this.state.is_admin,
-		// 	is_manager: this.state.is_manager
-		// };
-		// put(`users/${this.state.userID}`, pack, this.props.login.token, (res) => {
-		// 	console.log(res);
-		// 	if (this.props.login.id === this.state.userID) {
-		// 		this.props.updateLogin(pack);
-		// 	}
-		// });
 	}
 
 	render() {

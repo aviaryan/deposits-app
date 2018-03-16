@@ -12,3 +12,11 @@ export function sortOnKeys(dict) {
 
 	return tempDict;
 }
+
+export function makeDict(arr) {
+	let dct = {}
+	arr.forEach((item) => {
+		dct[item.id] = item
+	})
+	return dct
+}

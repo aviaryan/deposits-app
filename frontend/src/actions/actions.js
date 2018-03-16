@@ -4,6 +4,9 @@ export const UPDATE_LOGIN = 'UPDATE_LOGIN'
 export const UPDATE_USERS = 'UPDATE_USERS'
 export const UPDATE_USER = 'UPDATE_USER'
 export const DELETE_USERS = 'DELETE_USERS'
+export const SET_DEPOSITS = 'SET_DEPOSITS'
+export const UPDATE_DEPOSIT = 'UPDATE_DEPOSIT'
+export const DELETE_DEPOSITS = 'DELETE_DEPOSITS'
 
 export function setLogin(user, token){
 	return {
@@ -44,5 +47,26 @@ export function deleteUsers(users) {
 	return {
 		type: DELETE_USERS,
 		users: users
+	}
+}
+
+export function setDeposits(deposits) {
+	return {
+		type: SET_DEPOSITS,
+		deposits: deposits
+	}
+}
+
+export function updateDeposit(deposit) {
+	return {
+		type: UPDATE_DEPOSIT,
+		deposit: deposit
+	}
+}
+
+export function deleteDeposits(deposits) {
+	return {
+		type: DELETE_DEPOSITS,
+		deposits: deposits
 	}
 }
