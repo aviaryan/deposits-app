@@ -35,7 +35,7 @@ class DepositList extends Authed {
 		let url = (otherUser) ? `deposits/all?user_id=${userID}` : `deposits`;
 		get(url, this.props.login.token, (deposits) => {
 			console.log(deposits);
-			this.props.setDeposits(deposits);
+			this.props.setDeposits(deposits['results']);  // TODO: fix
 		});
 	}
 

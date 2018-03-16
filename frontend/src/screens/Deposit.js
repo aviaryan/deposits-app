@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { get, post, put, del } from '../lib/ajax';
 import Authed from './Authed';
 import { notify } from '../lib/notify';
-import { setUsers } from '../actions/actions';
 import autocomplete from 'autocomplete.js';
 import UIkit from 'uikit';
 
@@ -37,25 +36,14 @@ class Deposit extends Authed {
 						suggestion: suggestion => suggestion.username + '(' + suggestion.id + ')'
 					}
 				});
-				get(`users`, this.props.login.token, (users) => {
-					this.props.setUsers(users);
-				});
 			}
 		}
 	}
 
 	queryUser(query, cb){
-		// TODO: use actual server here
-		let results = [];
-		for (let id in this.props.users){
-			const user = this.props.users[id];
-			if (user.username.indexOf(query) > -1){
-				results.push(user);
-			} else if ((user.id + "").indexOf(query) > -1){
-				results.push(user);
-			}
-		}
-		cb(results);
+		get(`users/_autocomplete?query=${query}`, this.props.login.token, (users) => {
+			cb(users);
+		});
 	}
 
 	saveRecord(){
@@ -209,15 +197,8 @@ class Deposit extends Authed {
 
 const mapStateToProps = state => {
 	return {
-		login: state.login,
-		users: state.users
+		login: state.login
 	}
 }
 
-const mapDispatchToProps = dispatch => {
-	return {
-		setUsers: users => dispatch(setUsers(users))
-	}
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Deposit);
+export default connect(mapStateToProps, null)(Deposit);

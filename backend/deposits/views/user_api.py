@@ -26,6 +26,11 @@ USER = api.model('User', {
     'is_verified': fields.Boolean(default=False),
 })
 
+USER_MIN = api.model('UserMin', {
+    'id': fields.Integer(),
+    'username': fields.String(),
+})
+
 USER_PAGINATED = api.clone('UserPaginated', PAGINATED_MODEL, {
     'results': fields.List(fields.Nested(USER))
 })
@@ -186,3 +191,21 @@ class UserList(Resource, PaginatedResourceBase):
             return DAO.paginated_list(args=args)
         else:
             return DAO.paginated_list(args=args, **{'is_admin': False, 'is_manager': False})
+
+
+@api.route('/users/_autocomplete')
+class UserAutoComplete(Resource):
+    @api.header(*AUTH_HEADER_DEFN)
+    @login_required
+    @staff_only
+    @api.doc('autocomplete_users')
+    @api.marshal_list_with(USER_MIN)
+    def get(self):
+        """Autocomplete users"""
+        query = request.args.get('query', None)
+        user = g.current_user
+        if not query:
+            return DAO.list()[:20]
+        else:
+            ls = list(filter(lambda user: user.username.find(query) > -1, DAO.list()))
+            return ls[:20]

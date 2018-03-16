@@ -13,7 +13,7 @@ class UserList extends Authed {
 		}
 		get(`users`, this.props.login.token, (users) => {
 			console.log(users);
-			this.props.setUsers(users);
+			this.props.setUsers(users['results']);  // TODO: fix
 		});
 	}
 
