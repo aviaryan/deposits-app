@@ -2,11 +2,11 @@
 - [x] password 2 times check
 - [ ] basic pagination with filter
 - [x] list of users to assign deposit (by username email and ID)
+- [ ] click on new deposit on a user page has user selected pre-selected for admin
 - [ ] fine tune is_verified
 - [ ] front-end validation
 - [ ] list of banks
 - [x] integrate tests, be auto is_verified when testing (no mail)
-
 
 bugs
 

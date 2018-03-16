@@ -1,5 +1,6 @@
 import re
 from flask_restplus.fields import Raw
+from flask_restplus.fields import List, Nested  # noqa
 from datetime import datetime
 
 # https://stackoverflow.com/a/32010185/2295672

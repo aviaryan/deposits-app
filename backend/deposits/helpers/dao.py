@@ -1,5 +1,5 @@
 from .data import handle_extra_payload, validate_payload, fix_attribute_names
-from .database import get_object_or_404, get_object_list, update_model, create_model, delete_model
+from .database import get_object_or_404, get_object_list, update_model, create_model, delete_model, get_paginated_list
 
 
 # DAO for Models
@@ -23,6 +23,9 @@ class BaseDAO:
 
     def get(self, id_):
         return get_object_or_404(self.model, id_)
+
+    def paginated_list(self, url=None, args={}, **kwargs):
+        return get_paginated_list(self.model, url=url, args=args, **kwargs)
 
     def list(self, **kwargs):
         return get_object_list(self.model, **kwargs)

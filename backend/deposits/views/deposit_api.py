@@ -7,7 +7,7 @@ from deposits.models.deposit_model import Deposit as DepositModel
 
 from deposits.helpers.dao import BaseDAO
 from deposits.helpers.errors import ValidationError
-from deposits.helpers.utils import AUTH_HEADER_DEFN
+from deposits.helpers.utils import AUTH_HEADER_DEFN, PaginatedResourceBase, PAGE_PARAMS, PAGINATED_MODEL
 from deposits.helpers.permissions import has_deposit_access, admin_only
 import deposits.helpers.custom_fields as fields
 from deposits.helpers.query_filters import parse_args
@@ -25,6 +25,10 @@ DEPOSIT = api.model('Deposit', {
     'interest_rate': fields.Float(required=True),
     'tax_rate': fields.Float(required=True, min=0.0, max=100.0),
     'user_id': fields.Integer(min=1)  # for admin assign stuff
+})
+
+DEPOSIT_PAGINATED = api.clone('DepositPaginated', PAGINATED_MODEL, {
+    'results': fields.List(fields.Nested(DEPOSIT))
 })
 
 DEPOSIT_POST = api.clone('DepositPost', DEPOSIT, {})
@@ -129,7 +133,7 @@ class Deposit(Resource):
 
 
 @api.route('/deposits')
-class DepositList(Resource, DepositResource):
+class DepositList(Resource, DepositResource, PaginatedResourceBase):
     @api.header(*AUTH_HEADER_DEFN)
     @login_required
     @api.doc('create_deposit')
@@ -144,22 +148,26 @@ class DepositList(Resource, DepositResource):
     @api.header(*AUTH_HEADER_DEFN)
     @login_required
     @api.doc('list_user_deposits', params=DEPOSIT_PARAMS)
-    @api.marshal_list_with(DEPOSIT)
+    @api.doc(params=PAGE_PARAMS)
+    @api.marshal_with(DEPOSIT_PAGINATED)
     def get(self):
         """List user deposits"""
+        args = self.parser.parse_args()
         parsed_args = parse_args(self.deposit_parser)
         parsed_args['user_id'] = g.current_user.id
-        return DAO.list(**parsed_args)
+        return DAO.paginated_list(args=args, **parsed_args)
 
 
 @api.route('/deposits/all')
-class DepositListAll(Resource, DepositResource):
+class DepositListAll(Resource, DepositResource, PaginatedResourceBase):
     @api.header(*AUTH_HEADER_DEFN)
     @login_required
     @admin_only
     @api.doc('list_all_deposits', params=DEPOSIT_PARAMS)
-    @api.marshal_list_with(DEPOSIT)
+    @api.doc(params=PAGE_PARAMS)
+    @api.marshal_with(DEPOSIT_PAGINATED)
     def get(self):
         """List all deposits in the database"""
+        args = self.parser.parse_args()
         parsed_args = parse_args(self.deposit_parser)
-        return DAO.list(**parsed_args)
+        return DAO.paginated_list(args=args, **parsed_args)

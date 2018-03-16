@@ -8,7 +8,7 @@ from deposits.helpers.dao import BaseDAO
 from deposits.helpers.database import save_to_db
 from deposits.helpers.auth import hash_password, login_optional, get_user_from_header, generate_token
 from deposits.helpers.errors import ValidationError
-from deposits.helpers.utils import AUTH_HEADER_DEFN
+from deposits.helpers.utils import AUTH_HEADER_DEFN, PaginatedResourceBase, PAGE_PARAMS, PAGINATED_MODEL
 from deposits.helpers.mail import send_verify_mail
 from deposits.helpers.permissions import has_user_access, staff_only
 import deposits.helpers.custom_fields as fields
@@ -24,6 +24,10 @@ USER = api.model('User', {
     'is_admin': fields.Boolean(default=False),
     'is_manager': fields.Boolean(default=False),
     'is_verified': fields.Boolean(default=False),
+})
+
+USER_PAGINATED = api.clone('UserPaginated', PAGINATED_MODEL, {
+    'results': fields.List(fields.Nested(USER))
 })
 
 USER_POST = api.clone('UserPost', USER, {
@@ -152,7 +156,7 @@ class UserVerify(Resource):
 
 
 @api.route('/users')
-class UserList(Resource):
+class UserList(Resource, PaginatedResourceBase):
     @api.header(*AUTH_HEADER_DEFN)
     @login_optional
     @api.doc('create_user')
@@ -172,11 +176,13 @@ class UserList(Resource):
     @login_required
     @staff_only
     @api.doc('list_users')
-    @api.marshal_list_with(USER)
+    @api.doc(params=PAGE_PARAMS)
+    @api.marshal_with(USER_PAGINATED)
     def get(self):
         """List all users"""
+        args = self.parser.parse_args()
         user = g.current_user
         if user.is_admin:
-            return DAO.list()
+            return DAO.paginated_list(args=args)
         else:
-            return DAO.list(**{'is_admin': False, 'is_manager': False})
+            return DAO.paginated_list(args=args, **{'is_admin': False, 'is_manager': False})
