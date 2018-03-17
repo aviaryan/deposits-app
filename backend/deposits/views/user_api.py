@@ -7,7 +7,7 @@ from deposits.models.user_model import User as UserModel
 from deposits.helpers.dao import BaseDAO
 from deposits.helpers.database import save_to_db
 from deposits.helpers.auth import hash_password, login_optional, get_user_from_header, generate_token
-from deposits.helpers.errors import ValidationError
+from deposits.helpers.errors import ValidationError, NotFoundError
 from deposits.helpers.utils import AUTH_HEADER_DEFN, PaginatedResourceBase, PAGE_PARAMS, PAGINATED_MODEL
 from deposits.helpers.mail import send_verify_mail
 from deposits.helpers.permissions import has_user_access, staff_only
@@ -134,6 +134,18 @@ class User(Resource):
     def delete(self, user_id):
         """Delete a user given its id"""
         return DAO.delete(user_id, user_id=None)
+
+
+@api.route('/users/usernames/<string:username>')
+class UserByUsername(Resource):
+    @api.doc('get_user_by_username')
+    @api.marshal_with(USER)
+    def get(self, username):
+        """Fetch a user given their username"""
+        user = UserModel.query.filter_by(username=username).first()
+        if not user:
+            raise NotFoundError('User not found')
+        return user
 
 
 @api.header(*AUTH_HEADER_DEFN)

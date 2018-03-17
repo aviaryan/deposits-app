@@ -61,7 +61,7 @@ class DepositList extends Authed {
 
 	newDeposit() {
 		if (this.state.otherUser) {
-			this.props.setVar('deposit_user', this.state.otherUser.id);
+			this.props.setVar('deposit_user', this.state.otherUser.username);
 		}
 		this.props.history.push("/deposits/new");
 	}

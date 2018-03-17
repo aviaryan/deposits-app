@@ -12,14 +12,14 @@ class Deposit extends Authed {
 	constructor(props){
 		super(props);
 		this.state = { bank: '', account: '', savings: 0, start_date: (new Date()).toISOString().substr(0, 10),
-			end_date: '', interest_rate: 0, tax_rate: 0, user_id: 0 };
+			end_date: '', interest_rate: 0, tax_rate: 0, username: '' };
 	}
 
 	componentDidMount(){
 		if (!this.props.match.params.depositID) {
 			this.setState({new: true});
 			if (this.props.share.deposit_user) {
-				this.setState({ userEnabled: true, user_id: this.props.share.deposit_user });
+				this.setState({ userEnabled: true, username: this.props.share.deposit_user });
 				this.props.unsetVar('deposit_user');
 				this.initAutoComplete();
 			}
@@ -29,6 +29,10 @@ class Deposit extends Authed {
 			get(`deposits/${this.props.match.params.depositID}`, this.props.login.token, (deposit) => {
 				console.log(deposit);
 				this.setState(deposit);
+				// username state
+				get(`users/${deposit.user_id}`, this.props.login.token, (user) => {
+					this.setState({username: user.username});
+				});
 				if (this.props.login.is_admin) {
 					this.initAutoComplete();
 				}
@@ -42,8 +46,8 @@ class Deposit extends Authed {
 	initAutoComplete() {
 		// HACK: dom not created in new case
 		setTimeout(() => {
-			autocomplete('#user-id-input', {}, {
-				displayKey: suggestion => suggestion.id + '',
+			autocomplete('#username-input', {}, {
+				displayKey: suggestion => suggestion.username,
 				source: this.queryUser.bind(this),
 				templates: {
 					suggestion: suggestion => suggestion.username + '(' + suggestion.id + ')'
@@ -59,19 +63,25 @@ class Deposit extends Authed {
 	}
 
 	saveRecord(){
-		let pack = {};
+		if (this.props.login.is_admin && this.state.userEnabled) {
+			let temp = document.getElementById('username-input').value;
+			get(`users/usernames/${temp}`, this.props.login.token, (user) => {
+				this.saveRecord2({user_id: user.id});
+			}, (xhr) => {
+				notify(xhr.responseJSON['message']);
+			})
+		} else {
+			this.saveRecord2({});
+		}
+	}
+
+	saveRecord2(pack){
 		['bank', 'account', 'start_date', 'end_date'].forEach((key) => {
 			pack[key] = this.state[key];
 		});
 		['savings', 'interest_rate', 'tax_rate'].forEach((key) => {
 			pack[key] = parseFloat(this.state[key]);
 		});
-		if (this.props.login.is_admin && this.state.userEnabled) {
-			// let temp = this.state.user_id;
-			let temp = document.getElementById('user-id-input').value;
-			// faces issues with race condition of autocomplete library
-			pack['user_id'] = parseInt(temp, 10);
-		}
 		if (this.state.new) {
 			post('deposits', pack, (deposit) => {
 				console.log(deposit);
@@ -187,8 +197,8 @@ class Deposit extends Authed {
 						<div className="uk-margin">
 							<label className="uk-form-label" htmlFor="form-stacked-select">User</label>
 							<div className="uk-form-controls">
-								<input type="text" id="user-id-input" placeholder="Search by username..." className="uk-input"
-									value={this.state.user_id} onChange={this.bind} data-bind="user_id" />
+								<input type="text" id="username-input" placeholder="Search by username..." className="uk-input"
+									value={this.state.username} onChange={this.bind} data-bind="username" />
 							</div>
 						</div>
 					}
