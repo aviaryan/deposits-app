@@ -20,12 +20,18 @@ class UserList extends Authed {
 			start += this.props.users.limit;
 		} else if (dir === -1) {
 			start -= this.props.users.limit;
+		} else if (dir === -2) {
+			start = 1;
 		}
 		get(`users?start=${start}&limit=${this.props.users.limit}`, this.props.login.token, (result) => {
 			console.log(result);
 			this.frontBtn.disabled = (!result['next']);
 			this.backBtn.disabled = (!result['previous']);
 			this.props.setUsers(result);
+		}, (xhr) => {
+			if (xhr.responseJSON['code'] === 404) {
+				this.movePage(-2);
+			}
 		});
 	}
 

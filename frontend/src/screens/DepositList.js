@@ -40,6 +40,8 @@ class DepositList extends Authed {
 			start += this.props.deposits.limit;
 		} else if (dir === -1) {
 			start -= this.props.deposits.limit;
+		} else if (dir === -2) {
+			start = 1;
 		}
 		// cuz setState doesn't work quickly
 		if (otherUser === null) {
@@ -56,6 +58,11 @@ class DepositList extends Authed {
 			this.frontBtn.disabled = (!result['next']);
 			this.backBtn.disabled = (!result['previous']);
 			this.props.setDeposits(result);
+		}, (xhr) => {
+			// other user state, not valid now
+			if (xhr.responseJSON['code'] === 404) {
+				this.movePage(-2);
+			}
 		});
 	}
 
