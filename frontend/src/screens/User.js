@@ -1,9 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { get, put, del } from '../lib/ajax';
+import { get, put, del, post } from '../lib/ajax';
 import Authed from './Authed';
-import { updateLogin, updateUser, deleteUsers, unsetLogin } from '../actions/actions';
+import { updateLogin, updateUser, deleteUsers, unsetLogin, clear } from '../actions/actions';
 import { notify } from '../lib/notify';
 import UIkit from 'uikit';
 
@@ -11,7 +11,7 @@ import UIkit from 'uikit';
 class User extends Authed {
 	constructor(props){
 		super(props);
-		this.state = { email: '', full_name: '', username: '', is_admin: '', is_manager: '' };
+		this.state = { email: '', full_name: '', username: '', is_admin: '', is_manager: '', cp: '', np: '', vp: '' };
 	}
 
 	componentDidMount(){
@@ -28,6 +28,7 @@ class User extends Authed {
 		get(`users/${userID}`, this.props.login.token, (user) => {
 			console.log(user);
 			this.setState(user);
+			this.setState({ownProfile: this.props.login.id === user.id});
 		}, (xhr) => {
 			notify(xhr.responseJSON['message']);
 			this.setState({four04: true});
@@ -44,7 +45,7 @@ class User extends Authed {
 		};
 		put(`users/${this.state.userID}`, pack, this.props.login.token, (res) => {
 			console.log(res);
-			this.props.updateUserStore(pack, this.props.login.id === this.state.userID);
+			this.props.updateUserStore(pack, this.state.ownProfile);
 		});
 	}
 
@@ -52,7 +53,7 @@ class User extends Authed {
 		UIkit.modal.confirm('Do you want to delete this account?').then(() => {
 			del(`users/${this.state.userID}`, this.props.login.token, (user) => {
 				console.log(user);
-				if (this.props.login.id === this.state.userID) {
+				if (this.state.ownProfile) {
 					// same user
 					notify('Your account has been deleted. You have been logged out.');
 					this.props.logOut();
@@ -62,6 +63,38 @@ class User extends Authed {
 				this.props.deleteUserStore(user);
 			});
 		}, () => {});
+	}
+
+	changePassword() {
+		if ((this.props.login.is_admin || this.props.login.is_manager) && (!this.state.ownProfile)) {
+			this.changePassword2();
+		} else {
+			post('auth/login', { email: this.state.email, password: this.state.cp }, () => {
+				this.changePassword2();
+			}, (xhr) => {
+				// verify failed
+				notify('The current password is wrong');
+			});
+		}
+	}
+
+	changePassword2() {
+		if (this.state.np !== this.state.vp) {
+			notify('The new password and verify password dont match');
+			return;
+		}
+		let pack = {
+			password: this.state.np
+		};
+		put(`users/${this.state.userID}`, pack, this.props.login.token, (res) => {
+			notify('Password updated');
+			if (this.state.ownProfile) {
+				notify('Logging you out');
+				this.props.logOut();
+			}
+		}, (xhr) => {
+			notify(xhr.responseJSON['message']);
+		});
 	}
 
 	render() {
@@ -141,28 +174,33 @@ class User extends Authed {
 
 					<legend className="uk-legend">Change Password</legend>
 
+					{this.state.ownProfile &&
 					<div className="uk-margin">
 						<label className="uk-form-label" htmlFor="cp">Current Password</label>
 						<div className="uk-form-controls">
-							<input className="uk-input" id="cp" type="password" placeholder="Current Password" />
+							<input className="uk-input" id="cp" type="password" placeholder="Current Password"
+								value={this.state.cp} onChange={this.bind} data-bind="cp" />
 						</div>
 					</div>
+					}
 
 					<div className="uk-margin">
 						<label className="uk-form-label" htmlFor="np">New Password</label>
 						<div className="uk-form-controls">
-							<input className="uk-input" id="np" type="password" placeholder="New Password" />
+							<input className="uk-input" id="np" type="password" placeholder="New Password"
+								value={this.state.np} onChange={this.bind} data-bind="np" />
 						</div>
 					</div>
 
 					<div className="uk-margin">
 						<label className="uk-form-label" htmlFor="vp">Verify Password</label>
 						<div className="uk-form-controls">
-							<input className="uk-input" id="vp" type="password" placeholder="Verify Password" />
+							<input className="uk-input" id="vp" type="password" placeholder="Verify Password"
+								value={this.state.vp} onChange={this.bind} data-bind="vp" />
 						</div>
 					</div>
 
-					<button type="button" className="uk-button uk-button-primary" onClick={() => this.props.onLogin(this.state)}>SAVE</button>
+					<button type="button" className="uk-button uk-button-primary" onClick={this.changePassword.bind(this)} >SAVE</button>
 
 				</form>
 
@@ -186,7 +224,10 @@ const mapDispatchToProps = dispatch => {
 			dispatch(updateUser(user));
 		},
 		deleteUserStore: user => dispatch(deleteUsers([user])),
-		logOut: () => dispatch(unsetLogin())
+		logOut: () => {
+			dispatch(unsetLogin());
+			dispatch(clear());
+		}
 	}
 }
 

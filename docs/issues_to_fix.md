@@ -4,6 +4,7 @@
 - [x] list of users to assign deposit (by username email and ID)
 - [x] click on new deposit on a user page has user selected pre-selected for admin
 - [x] username instead of id for deposits, username - user endpoint
+- [x] implement change password
 - [ ] fine tune is_verified (or send welcome email on join)
 - [ ] front-end validation
 - [ ] list of banks
