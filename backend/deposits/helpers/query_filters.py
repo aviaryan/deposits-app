@@ -1,4 +1,5 @@
 from deposits.models.deposit_model import Deposit
+from deposits.models.user_model import User
 from .custom_fields import Date
 
 
@@ -51,6 +52,12 @@ def deposit_order_by(value, query):
     return query.order_by(col)
 
 
+def user_order_by(value, query):
+    col, direction = value.split('.')
+    col = getattr(User, col)
+    if direction == 'desc':
+        col = col.desc()
+    return query.order_by(col)
 # ADD CUSTOM FILTERS TO LIST
 
 
@@ -60,6 +67,7 @@ FILTERS_LIST = {
     '__deposit_min': deposit_min,
     '__deposit_max': deposit_max,
     '__deposit_order_by': deposit_order_by,
+    '__user_order_by': user_order_by,
 }
 
 

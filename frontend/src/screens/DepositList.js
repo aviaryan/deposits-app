@@ -53,7 +53,7 @@ class DepositList extends Authed {
 		}
 		// fetch
 		let url = otherUser ? `deposits/all?user_id=${userID}&` : `deposits?`;
-		get(url + `start=${start}&limit=${this.props.deposits.limit}`, this.props.login.token, (result) => {
+		get(url + `order_by=id.desc&start=${start}&limit=${this.props.deposits.limit}`, this.props.login.token, (result) => {
 			console.log(result);
 			this.frontBtn.disabled = (!result['next']);
 			this.backBtn.disabled = (!result['previous']);

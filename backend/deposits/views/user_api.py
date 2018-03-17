@@ -1,4 +1,4 @@
-from flask_restplus import Namespace, Resource
+from flask_restplus import Namespace, Resource, reqparse
 from flask_login import login_required
 from flask import g, request, current_app
 
@@ -12,6 +12,7 @@ from deposits.helpers.utils import AUTH_HEADER_DEFN, PaginatedResourceBase, PAGE
 from deposits.helpers.mail import send_verify_mail
 from deposits.helpers.permissions import has_user_access, staff_only
 import deposits.helpers.custom_fields as fields
+from deposits.helpers.query_filters import parse_args
 
 
 api = Namespace('users', description='Users', path='/')
@@ -103,6 +104,22 @@ class UserDAO(BaseDAO):
 DAO = UserDAO(UserModel, USER_POST, USER_PUT)
 
 
+# DEFINE Query PARAMS
+
+USER_PARAMS = {
+    'order_by': {
+        'description': 'Order by a field, example "id.desc" or "username.asc"'
+    },
+}
+
+class UserResource():
+    """
+    User Resource Base class
+    """
+    user_parser = reqparse.RequestParser()
+    user_parser.add_argument('order_by', type=str, dest='__user_order_by')
+
+
 @api.route('/users/<int:user_id>')
 class User(Resource):
     @login_required
@@ -173,7 +190,7 @@ class UserVerify(Resource):
 
 
 @api.route('/users')
-class UserList(Resource, PaginatedResourceBase):
+class UserList(Resource, UserResource, PaginatedResourceBase):
     @api.header(*AUTH_HEADER_DEFN)
     @login_optional
     @api.doc('create_user')
@@ -192,17 +209,20 @@ class UserList(Resource, PaginatedResourceBase):
     @api.header(*AUTH_HEADER_DEFN)
     @login_required
     @staff_only
-    @api.doc('list_users')
+    @api.doc('list_users', params=USER_PARAMS)
     @api.doc(params=PAGE_PARAMS)
     @api.marshal_with(USER_PAGINATED)
     def get(self):
         """List all users"""
         args = self.parser.parse_args()
         user = g.current_user
+        parsed_args = parse_args(self.user_parser)
         if user.is_admin:
-            return DAO.paginated_list(args=args)
+            return DAO.paginated_list(args=args, **parsed_args)
         else:
-            return DAO.paginated_list(args=args, **{'is_admin': False, 'is_manager': False})
+            parsed_args['is_admin'] = False
+            parsed_args['is_manager'] = False
+            return DAO.paginated_list(args=args, **parsed_args)
 
 
 @api.route('/users/_autocomplete')

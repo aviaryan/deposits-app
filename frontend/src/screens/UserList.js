@@ -23,7 +23,7 @@ class UserList extends Authed {
 		} else if (dir === -2) {
 			start = 1;
 		}
-		get(`users?start=${start}&limit=${this.props.users.limit}`, this.props.login.token, (result) => {
+		get(`users?order_by=id.desc&start=${start}&limit=${this.props.users.limit}`, this.props.login.token, (result) => {
 			console.log(result);
 			this.frontBtn.disabled = (!result['next']);
 			this.backBtn.disabled = (!result['previous']);
