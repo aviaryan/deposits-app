@@ -5,6 +5,7 @@ import Authed from './Authed';
 import { notify } from '../lib/notify';
 import autocomplete from 'autocomplete.js';
 import UIkit from 'uikit';
+import { unsetVar } from '../actions/actions';
 
 
 class Deposit extends Authed {
@@ -17,27 +18,38 @@ class Deposit extends Authed {
 	componentDidMount(){
 		if (!this.props.match.params.depositID) {
 			this.setState({new: true});
+			if (this.props.share.deposit_user) {
+				this.setState({ userEnabled: true, user_id: this.props.share.deposit_user });
+				this.props.unsetVar('deposit_user');
+				this.initAutoComplete();
+			}
 		} else {
 			// edit deposit case
-			this.setState({depositID: this.props.match.params.depositID});
+			this.setState({ depositID: this.props.match.params.depositID, userEnabled: true });
 			get(`deposits/${this.props.match.params.depositID}`, this.props.login.token, (deposit) => {
 				console.log(deposit);
 				this.setState(deposit);
+				if (this.props.login.is_admin) {
+					this.initAutoComplete();
+				}
 			}, (xhr) => {
 				notify(xhr.responseJSON['message']);
 				this.setState({ four04: true });
 			});
-			// fetch the user list too
-			if (this.props.login.is_admin) {
-				autocomplete('#user-id-input', {}, {
-					displayKey: suggestion => suggestion.id + '',
-					source: this.queryUser.bind(this),
-					templates: {
-						suggestion: suggestion => suggestion.username + '(' + suggestion.id + ')'
-					}
-				});
-			}
 		}
+	}
+
+	initAutoComplete() {
+		// HACK: dom not created in new case
+		setTimeout(() => {
+			autocomplete('#user-id-input', {}, {
+				displayKey: suggestion => suggestion.id + '',
+				source: this.queryUser.bind(this),
+				templates: {
+					suggestion: suggestion => suggestion.username + '(' + suggestion.id + ')'
+				}
+			});
+		}, 1000);
 	}
 
 	queryUser(query, cb){
@@ -54,7 +66,7 @@ class Deposit extends Authed {
 		['savings', 'interest_rate', 'tax_rate'].forEach((key) => {
 			pack[key] = parseFloat(this.state[key]);
 		});
-		if (this.props.login.is_admin && !this.state.new) {
+		if (this.props.login.is_admin && this.state.userEnabled) {
 			// let temp = this.state.user_id;
 			let temp = document.getElementById('user-id-input').value;
 			// faces issues with race condition of autocomplete library
@@ -171,7 +183,7 @@ class Deposit extends Authed {
 						</div>
 					</div>
 
-					{(this.props.login.is_admin && !this.state.new) &&
+					{(this.props.login.is_admin && this.state.userEnabled) &&
 						<div className="uk-margin">
 							<label className="uk-form-label" htmlFor="form-stacked-select">User</label>
 							<div className="uk-form-controls">
@@ -197,8 +209,15 @@ class Deposit extends Authed {
 
 const mapStateToProps = state => {
 	return {
-		login: state.login
+		login: state.login,
+		share: state.share
 	}
 }
 
-export default connect(mapStateToProps, null)(Deposit);
+const mapDispatchToProps = dispatch => {
+	return {
+		unsetVar: key => dispatch(unsetVar(key))
+	}
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Deposit);

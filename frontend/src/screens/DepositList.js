@@ -1,9 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 import { get } from '../lib/ajax';
 import Authed from './Authed';
-import { setDeposits } from '../actions/actions';
+import { setDeposits, setVar } from '../actions/actions';
 
 
 class DepositList extends Authed {
@@ -60,6 +59,13 @@ class DepositList extends Authed {
 		});
 	}
 
+	newDeposit() {
+		if (this.state.otherUser) {
+			this.props.setVar('deposit_user', this.state.otherUser.id);
+		}
+		this.props.history.push("/deposits/new");
+	}
+
 	render() {
 		if (!this.props.login){
 			return super.unauthorized();
@@ -103,7 +109,7 @@ class DepositList extends Authed {
 
 				<div>
 					<div className="uk-inline-block">
-						<Link to="/deposits/new"><button className="uk-button uk-button-primary">NEW DEPOSIT</button></Link>
+						<button className="uk-button uk-button-primary" onClick={this.newDeposit.bind(this)}>NEW DEPOSIT</button>
 					</div>
 					<div className="uk-inline-block uk-float-right">
 						<b>{this.props.deposits.start}</b>－<b>{Math.min(this.props.deposits.start + this.props.deposits.limit - 1, this.props.deposits.count)}
@@ -142,13 +148,15 @@ class DepositList extends Authed {
 const mapStateToProps = state => {
 	return {
 		login: state.login,
-		deposits: state.deposits
+		deposits: state.deposits,
+		share: state.share
 	}
 }
 
 const mapDispatchToProps = dispatch => {
 	return {
-		setDeposits: result => dispatch(setDeposits(result))
+		setDeposits: result => dispatch(setDeposits(result)),
+		setVar: (key, val) => dispatch(setVar(key, val))
 	}
 }
 

@@ -8,6 +8,8 @@ export const SET_DEPOSITS = 'SET_DEPOSITS'
 export const UPDATE_DEPOSIT = 'UPDATE_DEPOSIT'
 export const DELETE_DEPOSITS = 'DELETE_DEPOSITS'
 export const CLEAR = 'CLEAR'
+export const SET_VAR = 'SET_VAR'
+export const UNSET_VAR = 'UNSET_VAR'
 
 export function setLogin(user, token){
 	return {
@@ -75,5 +77,20 @@ export function deleteDeposits(deposits) {
 export function clear() {
 	return {
 		type: CLEAR
+	}
+}
+
+export function setVar(key, val) {
+	return {
+		type: SET_VAR,
+		key: key,
+		val: val
+	}
+}
+
+export function unsetVar(key) {
+	return {
+		type: UNSET_VAR,
+		key: key
 	}
 }
