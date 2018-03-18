@@ -32,7 +32,7 @@ class Report extends Authed {
 			} else {
 				url = 'deposits?';
 			}
-			url += 'start=1&limit=1000000000';
+			url += 'start=1&limit=1000000000&order_by=id.desc';
 			['from_date', 'to_date'].forEach((val) => {
 				if (this.state[val]) {
 					url += `&${val}=${encodeURIComponent(this.state[val])}`;
@@ -178,12 +178,12 @@ class Report extends Authed {
 									<th className="uk-table-shrink font-header-print">ID</th>
 										<th className="uk-table-shrink font-header-print">Bank</th>
 										<th className="uk-table-shrink font-header-print">Account No</th>
-										<th className="uk-table-shrink font-header-print">Principal</th>
-										<th className="uk-table-shrink font-header-print">Amount</th>
+										<th className="uk-table-shrink font-header-print">Principal ($)</th>
+										<th className="uk-table-shrink font-header-print">Amount ($)</th>
 										<th className="uk-table-shrink font-header-print">Interest Rate</th>
-										<th className="uk-table-shrink font-header-print">Interest</th>
+										<th className="uk-table-shrink font-header-print">Interest ($)</th>
 										<th className="uk-table-shrink font-header-print">Tax Rate</th>
-										<th className="uk-table-shrink font-header-print">Tax</th>
+										<th className="uk-table-shrink font-header-print">Tax ($)</th>
 										<th className="uk-table-shrink font-header-print">Start Date</th>
 										<th className="uk-table-shrink font-header-print">End Date</th>
 									</tr>
@@ -199,7 +199,7 @@ class Report extends Authed {
 								<br />
 								<b>Total Profit:</b> <span className="color-green">{netProfit.toFixed(3)}</span>
 								<br />
-								<b>Net:</b>
+								<b>Net: </b>
 									<span className={netLoss > netProfit ? "color-red" : (netProfit > netLoss) ? "color-green" : ""}>{(netProfit - netLoss).toFixed(3)}
 								</span>
 							</div>

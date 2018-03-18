@@ -7,8 +7,8 @@
 - [x] implement change password
 - [x] fine tune is_verified (or send welcome email on join)
 - [ ] list of banks (looks important)
-- [ ] username a-z0-9-_
-- [ ] max number input in savings
+- [x] username a-z0-9-_
+- [x] max number input in savings
 - [ ] all feature in deposit list maybe (not said so)
 - [ ] front-end validation
 - [x] integrate tests, be auto is_verified when testing (no mail)
@@ -21,7 +21,7 @@ bugs
 - [x] sign up button on sign up page
 - [x] is_admin / manager buttons on manager's user page
 - [x] order in lists deposits and users
-- [ ] order in final report print
+- [x] order in final report print
 
 thoughts
 
