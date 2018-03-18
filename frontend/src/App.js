@@ -44,7 +44,7 @@ class App extends Component {
 							{!this.props.login &&
 								<div className="uk-navbar-right">
 									<ul className="uk-navbar-nav">
-									<li><Link to="/signup"><button className="uk-button uk-button-secondary">SIGN UP</button></Link></li>
+									<li><Link to="/signup"><button className="uk-button uk-button-secondary" id="signUpBtn">SIGN UP</button></Link></li>
 									</ul>
 								</div>
 							}

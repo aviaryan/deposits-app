@@ -15,6 +15,11 @@ class SignUp extends Component {
 		this.bind = this.bind.bind(this);
 	}
 
+	componentDidMount(){
+		// sorry
+		document.getElementById('signUpBtn').style.display = 'none';
+	}
+
 	bind(e) {
 		let attr = e.target.getAttribute('data-bind');
 		this.setState({ [attr]: (e.target.getAttribute('type') === 'checkbox') ? !this.state[attr] : e.target.value });

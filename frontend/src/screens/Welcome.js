@@ -20,6 +20,10 @@ class Welcome extends Component {
 
 	componentDidMount(){
 		this.checkLogin();
+		let btn = document.getElementById('signUpBtn')
+		if (btn) {
+			btn.style.display = 'inline-block';
+		}
 	}
 
 	componentDidUpdate(){
