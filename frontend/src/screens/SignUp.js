@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 // import jquery from 'jquery';
 import { post } from '../lib/ajax';
-import { notify } from '../lib/notify';
+import { respError, success, danger } from '../lib/notify';
 import { updateUser } from '../actions/actions';
 // import { setLogin } from '../actions/actions';
 // import { notify } from '../lib/notify';
@@ -23,7 +23,7 @@ class SignUp extends Component {
 	createAccount(){
 		this.props.onRegister(this.state, this.props.login, () => {
 			if (this.props.login) {
-				notify('Account was created. You may create another account or go back.');
+				success('Account was created. You may create another account or go back.');
 			} else {
 				this.setState({accountCreated: true});
 			}
@@ -105,6 +105,7 @@ const mapDispatchToProps = dispatch => {
 		onRegister: (state, login, cb) => {
 			// password different check
 			if (state.password !== state.verify){
+				danger('Passwords don\'t match');
 				console.log('password different');
 				return;
 			}
@@ -125,9 +126,7 @@ const mapDispatchToProps = dispatch => {
 				dispatch(updateUser(res));
 				// successful creation callback
 				cb();
-			}, (xhr) => {
-				console.log(xhr.responseJSON);
-			}, login ? login.token : null);
+			}, respError, login ? login.token : null);
 		}
 	}
 }

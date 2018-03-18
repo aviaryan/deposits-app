@@ -4,6 +4,7 @@ import { get } from '../lib/ajax';
 import { Link } from 'react-router-dom';
 import Authed from './Authed';
 import { setUsers } from '../actions/actions';
+import { respError } from '../lib/notify';
 
 
 class UserList extends Authed {
@@ -31,6 +32,8 @@ class UserList extends Authed {
 		}, (xhr) => {
 			if (xhr.responseJSON['code'] === 404) {
 				this.movePage(-2);
+			} else {
+				respError(xhr);
 			}
 		});
 	}

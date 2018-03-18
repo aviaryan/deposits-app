@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { get } from '../lib/ajax';
 import Authed from './Authed';
+import { respError } from '../lib/notify';
 import { setDeposits, setVar, setDepositsOther, clearDepositsOther } from '../actions/actions';
 
 
@@ -31,7 +32,7 @@ class DepositList extends Authed {
 				this.setState({ otherUserID: userID });
 				get(`users/${userID}`, this.props.login.token, (user) => {
 					this.setState({ otherUser: user });
-				});
+				}, respError);
 			} else {
 				this.setState({ four04: true });
 				return;
@@ -99,6 +100,8 @@ class DepositList extends Authed {
 			// other user state, not valid now
 			if (xhr.responseJSON['code'] === 404) {
 				this.movePage(-2);
+			} else {
+				respError(xhr);
 			}
 		});
 	}

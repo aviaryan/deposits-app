@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { get, put, del, post } from '../lib/ajax';
 import Authed from './Authed';
 import { updateLogin, updateUser, deleteUsers, unsetLogin, clear } from '../actions/actions';
-import { notify } from '../lib/notify';
+import { respError, success, danger } from '../lib/notify';
 import UIkit from 'uikit';
 
 
@@ -30,7 +30,7 @@ class User extends Authed {
 			this.setState(user);
 			this.setState({ownProfile: this.props.login.id === user.id});
 		}, (xhr) => {
-			notify(xhr.responseJSON['message']);
+			respError(xhr);
 			this.setState({four04: true});
 		});
 	}
@@ -45,8 +45,9 @@ class User extends Authed {
 		};
 		put(`users/${this.state.userID}`, pack, this.props.login.token, (res) => {
 			console.log(res);
+			success('Profile updated!');
 			this.props.updateUserStore(pack, this.state.ownProfile);
-		});
+		}, respError);
 	}
 
 	deleteUser(){
@@ -55,13 +56,13 @@ class User extends Authed {
 				console.log(user);
 				if (this.state.ownProfile) {
 					// same user
-					notify('Your account has been deleted. You have been logged out.');
+					success('Your account has been deleted. You have been logged out.');
 					this.props.logOut();
 				} else {
 					this.setState({ deleted: true });
 				}
 				this.props.deleteUserStore(user);
-			});
+			}, respError);
 		}, () => {});
 	}
 
@@ -73,28 +74,26 @@ class User extends Authed {
 				this.changePassword2();
 			}, (xhr) => {
 				// verify failed
-				notify('The current password is wrong');
+				danger('The current password is wrong');
 			});
 		}
 	}
 
 	changePassword2() {
 		if (this.state.np !== this.state.vp) {
-			notify('The new password and verify password dont match');
+			danger('The new password and verify password dont match');
 			return;
 		}
 		let pack = {
 			password: this.state.np
 		};
 		put(`users/${this.state.userID}`, pack, this.props.login.token, (res) => {
-			notify('Password updated');
+			success('Password updated');
 			if (this.state.ownProfile) {
-				notify('Logging you out');
+				success('Logging you out');
 				this.props.logOut();
 			}
-		}, (xhr) => {
-			notify(xhr.responseJSON['message']);
-		});
+		}, respError);
 	}
 
 	render() {

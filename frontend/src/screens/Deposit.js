@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { get, post, put, del } from '../lib/ajax';
 import Authed from './Authed';
-import { notify } from '../lib/notify';
+import { respError, success } from '../lib/notify';
 import autocomplete from 'autocomplete.js';
 import UIkit from 'uikit';
 import { unsetVar } from '../actions/actions';
@@ -32,12 +32,12 @@ class Deposit extends Authed {
 				// username state
 				get(`users/${deposit.user_id}`, this.props.login.token, (user) => {
 					this.setState({username: user.username});
-				});
+				}, respError);
 				if (this.props.login.is_admin) {
 					this.initAutoComplete();
 				}
 			}, (xhr) => {
-				notify(xhr.responseJSON['message']);
+				respError(xhr);
 				this.setState({ four04: true });
 			});
 		}
@@ -67,9 +67,7 @@ class Deposit extends Authed {
 			let temp = document.getElementById('username-input').value;
 			get(`users/usernames/${temp}`, this.props.login.token, (user) => {
 				this.saveRecord2({user_id: user.id});
-			}, (xhr) => {
-				notify(xhr.responseJSON['message']);
-			})
+			}, respError);
 		} else {
 			this.saveRecord2({});
 		}
@@ -85,19 +83,15 @@ class Deposit extends Authed {
 		if (this.state.new) {
 			post('deposits', pack, (deposit) => {
 				console.log(deposit);
-				notify('Deposit record saved');
+				success('Deposit record saved!');
 				this.props.history.goBack();
 				// TODO: not sure about behavior here
-			}, (xhr) => {
-				notify(xhr.responseJSON['message']);
-			}, this.props.login.token);
+			}, respError, this.props.login.token);
 		} else {
 			put(`deposits/${this.state.depositID}`, pack, this.props.login.token, (deposit) => {
 				console.log(deposit, pack);
-				// TODO: flash a inline message now
-			}, (xhr) => {
-				notify(xhr.responseJSON['message']);
-			});
+				success('Deposit record updated!');
+			}, respError);
 		}
 	}
 
@@ -106,7 +100,7 @@ class Deposit extends Authed {
 			del(`deposits/${this.state.depositID}`, this.props.login.token, (deposit) => {
 				console.log(deposit);
 				this.setState({ deleted: true });
-			});
+			}, respError);
 		}, () => {});
 	}
 

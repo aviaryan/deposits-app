@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { unsetLogin } from './../actions/actions';
 import { get } from '../lib/ajax';
-import { notify } from '../lib/notify';
+import { respError } from '../lib/notify';
 
 
 class Verify extends Component {
@@ -25,7 +25,7 @@ class Verify extends Component {
 			this.setState({ user: user });
 		}, (xhr) => {
 			this.setState({ fail: true });
-			notify(xhr.responseJSON['message']);
+			respError(xhr);
 		});
 	}
 

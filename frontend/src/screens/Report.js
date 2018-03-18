@@ -3,7 +3,7 @@ import Authed from './Authed';
 import { connect } from 'react-redux';
 import { get } from '../lib/ajax';
 import autocomplete from 'autocomplete.js';
-import { notify } from '../lib/notify';
+import { respError, success } from '../lib/notify';
 // import jsPDF from 'jspdf';
 import html2pdf from 'html2pdf.js';
 
@@ -43,14 +43,10 @@ class Report extends Authed {
 				console.log(deposits);
 				// print report magic
 				this.setState({deposits: deposits.results});
-				notify('Your file should start downloading in a moment');
+				success('Your file should start downloading in a moment');
 				setTimeout(this.generate, 2000);
-			}, (xhr) => {
-				notify(xhr.responseJSON['message']);
-			})
-		}, (xhr) => {
-			notify(xhr.responseJSON['message']);
-		})
+			}, respError);
+		}, respError);
 	}
 
 	generate() {
