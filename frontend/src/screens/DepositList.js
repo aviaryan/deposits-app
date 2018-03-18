@@ -4,6 +4,7 @@ import { get } from '../lib/ajax';
 import Authed from './Authed';
 import { respError } from '../lib/notify';
 import { setDeposits, setVar, setDepositsOther, clearDepositsOther } from '../actions/actions';
+import autocomplete from 'autocomplete.js';
 
 
 class DepositList extends Authed {
@@ -24,6 +25,7 @@ class DepositList extends Authed {
 		} else {
 			userID = parseInt(userID, 10);
 		}
+		this.initBankAutoComplete();
 		// find deposit page status
 		let otherUser = false;
 		if (this.props.login.id !== userID) {
@@ -134,6 +136,28 @@ class DepositList extends Authed {
 		this.movePage(-2, null, null, false);
 	}
 
+	initBankAutoComplete() {
+		// HACK: dom not created in new case
+		let comp = this;
+		setTimeout(() => {
+			autocomplete('#bank', {}, {
+				displayKey: suggestion => suggestion,
+				source: this.queryBank.bind(this),
+				templates: {
+					suggestion: suggestion => suggestion
+				}
+			}).on('autocomplete:selected', function (event, suggestion, dataset) {
+				comp.setState({bank: suggestion });
+			});
+		}, 1000);
+	}
+
+	queryBank(query, cb) {
+		get(`deposits/banks/_autocomplete?query=${encodeURIComponent(query)}`, this.props.login.token, (banks) => {
+			cb(banks['banks']);
+		});
+	}
+
 	render() {
 		if (!this.props.login){
 			return super.unauthorized();
@@ -199,7 +223,7 @@ class DepositList extends Authed {
 
 				<div className="uk-margin-top">
 					<div className="uk-inline-block">
-						<input type="text" placeholder="Bank" className="uk-input uk-form-width-small"
+						<input type="text" id="bank" placeholder="Bank" className="uk-input uk-form-width-small uk-text-small"
 							value={this.state.bank} onChange={this.bind} data-bind="bank" />
 					</div>
 

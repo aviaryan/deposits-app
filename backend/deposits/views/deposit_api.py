@@ -198,9 +198,14 @@ class BankAutoComplete(Resource):
     def get(self):
         """Autocomplete banks"""
         query = request.args.get('query', None)
-        kwargs = {'user_id': g.current_user.id}
-        deposits = DAO.list(**kwargs)
-        banks = [deposit.bank for deposit in deposits] + BANKS
+        # user_id = request.args.get('user_id', g.current_user.id)
+        # mine = request.args.get('mine', 'false')
+        # ^ params
+        # kwargs = {'user_id': user_id}
+        deposits = DAO.list()
+        banks = [deposit.bank for deposit in deposits]
+        # if mine == 'false':
+        banks = banks + BANKS
         banks = list(set(banks))
         if not query:
             return {'banks': banks[:10]}
