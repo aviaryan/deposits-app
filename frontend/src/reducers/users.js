@@ -1,7 +1,9 @@
 import { SET_USERS, UPDATE_USER, DELETE_USERS, CLEAR } from '../actions/actions'
 import { sortOnKeys, makeDict, pageState } from '../lib/utils'
 
-export default function users(state = pageState, action) {
+let pgState = JSON.parse(JSON.stringify(pageState))
+
+export default function users(state = pgState, action) {
 	switch (action.type) {
 		case SET_USERS:
 			action.response['results'] = sortOnKeys(makeDict(action.response['results']))
@@ -24,7 +26,7 @@ export default function users(state = pageState, action) {
 			})
 			return state
 		case CLEAR:
-			return pageState
+			return pgState
 		default:
 			return state
 	}

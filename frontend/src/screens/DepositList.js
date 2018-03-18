@@ -152,6 +152,12 @@ class DepositList extends Authed {
 		for (let id in this.props.deposits.results) {
 			if (this.props.deposits.results.hasOwnProperty(id)) {
 				const deposit = this.props.deposits.results[id];
+				if (deposit.amount === null || deposit.amount === undefined) {
+					console.log('crazy bug');
+					console.log(deposit);
+					continue;
+					// BUG: actually fixed by copying pageState dict, but still keeping
+				}
 				deposits.push(
 					<tr key={id} className="hover-pointer"
 						onClick={() => this.props.history.push(`/deposits/${deposit.id}`)}>

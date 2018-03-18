@@ -1,7 +1,9 @@
 import { SET_DEPOSITS, UPDATE_DEPOSIT, DELETE_DEPOSITS, CLEAR, SET_DEPOSITS_OTHER, CLEAR_DEPOSITS_OTHER } from '../actions/actions'
 import { sortOnKeys, makeDict, pageState } from '../lib/utils'
 
-export default function deposits(state = pageState, action) {
+let pgState = JSON.parse(JSON.stringify(pageState))
+
+export default function deposits(state = pgState, action) {
 	switch (action.type) {
 		case SET_DEPOSITS:
 			action.response['results'] = sortOnKeys(makeDict(action.response['results']))
@@ -30,7 +32,7 @@ export default function deposits(state = pageState, action) {
 			state.other = {}
 			return state
 		case CLEAR:
-			return pageState
+			return pgState
 		default:
 			return state
 	}
