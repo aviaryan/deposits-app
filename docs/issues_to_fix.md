@@ -5,7 +5,7 @@
 - [x] click on new deposit on a user page has user selected pre-selected for admin
 - [x] username instead of id for deposits, username - user endpoint
 - [x] implement change password
-- [ ] fine tune is_verified (or send welcome email on join)
+- [x] fine tune is_verified (or send welcome email on join)
 - [ ] list of banks (looks important)
 - [ ] all feature in deposit list maybe (not said so)
 - [ ] front-end validation
@@ -23,7 +23,7 @@ bugs
 thoughts
 
 - [x] save state for users and deposits list for faster load on back, no need to add to that state cuz we don't know if that data belongs to current page, delete user might work on users state though.
-- [ ] error handling in all requests, xhr.responseJSON can go wrong too so check that and throw error in a different way
+- [x] error handling in all requests, xhr.responseJSON can go wrong too so check that and throw error in a different way
 
 last times
 

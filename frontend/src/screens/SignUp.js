@@ -57,7 +57,7 @@ class SignUp extends Component {
 					<fieldset className="uk-fieldset">
 						<legend className="uk-legend">Register New User</legend>
 						<div className="uk-margin">
-							<input className="uk-input" type="text" value={this.state.full_name} placeholder="First Last"
+							<input className="uk-input" type="text" value={this.state.full_name} placeholder="Full Name"
 								onChange={this.bind} data-bind="full_name" />
 						</div>
 						<div className="uk-margin">

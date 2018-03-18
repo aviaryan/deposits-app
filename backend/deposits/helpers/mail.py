@@ -17,5 +17,18 @@ def send_verify_mail(to, username, token):
     mail = Mail(from_email, subject, to_email, content)
     response = sg.client.mail.send.post(request_body=mail.get())
     print(response.status_code)
-    print(response.body)
-    print(response.headers)
+
+
+def send_welcome_mail(to, username):
+    from_email = Email("deposits@aviaryan.com")
+    to_email = Email(to)
+    subject = "[DEPOSITS] Welcome to Deposits"
+    content = Content(
+        "text/plain",
+        "Hi " + username + ",\n\n" \
+        + "We are so glad to have you on Deposits. Visit the following link to login.\n\n" \
+        + "http://localhost:3000/"
+    )
+    mail = Mail(from_email, subject, to_email, content)
+    response = sg.client.mail.send.post(request_body=mail.get())
+    print(response.status_code)

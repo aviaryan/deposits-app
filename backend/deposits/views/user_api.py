@@ -9,7 +9,7 @@ from deposits.helpers.database import save_to_db
 from deposits.helpers.auth import hash_password, login_optional, get_user_from_header, generate_token
 from deposits.helpers.errors import ValidationError, NotFoundError
 from deposits.helpers.utils import AUTH_HEADER_DEFN, PaginatedResourceBase, PAGE_PARAMS, PAGINATED_MODEL
-from deposits.helpers.mail import send_verify_mail
+from deposits.helpers.mail import send_verify_mail, send_welcome_mail
 from deposits.helpers.permissions import has_user_access, staff_only
 import deposits.helpers.custom_fields as fields
 from deposits.helpers.query_filters import parse_args
@@ -186,6 +186,8 @@ class UserVerify(Resource):
         user = get_user_from_header(token)
         user.is_verified = True
         save_to_db(user)
+        # welcome
+        send_welcome_mail(user.email, user.username)
         return user
 
 
@@ -204,6 +206,9 @@ class UserList(Resource, UserResource, PaginatedResourceBase):
         # send email
         if not user.is_verified:
             send_verify_mail(user.email, user.username, generate_token(user))
+        elif not current_app.config['TESTING']:
+            # new user case (normal)
+            send_welcome_mail(user.email, user.username)
         return user, code
 
     @api.header(*AUTH_HEADER_DEFN)
