@@ -14,7 +14,8 @@ export function success(message){
 }
 
 export function danger(message){
-	notify(message, 1400, 'danger');
+	notify(message, 2000, 'danger');
+	// more cause important
 }
 
 export function respError(xhr){

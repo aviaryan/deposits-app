@@ -19,7 +19,7 @@ DEPOSIT = api.model('Deposit', {
     'id': fields.Integer(required=True),
     'bank': fields.String(required=True),
     'account': fields.String(required=True, min=11, max=20, alnum=True),
-    'savings': fields.Float(required=True, minx=0.0),
+    'savings': fields.Float(required=True, minx=0.0, max=100000000000000),  # 100 trillion gdp
     'start_date': fields.Date(required=True),
     'end_date': fields.Date(required=True),
     'interest_rate': fields.Float(required=True),

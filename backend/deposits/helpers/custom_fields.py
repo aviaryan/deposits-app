@@ -10,6 +10,7 @@ EMAIL_REGEX = re.compile(r'\S+@\S+\.\S+')
 NOSPACE_REGEX = re.compile(r'^\S+$')
 PASS_REGEX = re.compile(r'.*(\S\d|\d\S).*')
 ALNUM_REGEX = re.compile(r'^[a-zA-Z0-9]*$')
+USERNAME_REGEX = re.compile(r'^[a-zA-Z0-9\-_]*$')
 
 
 class CustomField(Raw):
@@ -30,6 +31,7 @@ class CustomField(Raw):
         self.nospace = kwargs.get('nospace')
         self.passw = kwargs.get('passw')
         self.alnum = kwargs.get('alnum')
+        self.uname = kwargs.get('uname')
 
     def format(self, value):
         """
@@ -104,6 +106,9 @@ class String(CustomField):
                 return False
             if self.alnum and not ALNUM_REGEX.match(value):
                 self.validation_error = '%s should only contain alphanumeric characters'
+                return False
+            if self.uname and not USERNAME_REGEX.match(value):
+                self.validation_error = '%s should contain only alphanumeric and (_,-) characters'
                 return False
             return self.validate_min_max(len(value), ' characters in length')
         else:
