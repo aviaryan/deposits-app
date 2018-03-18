@@ -167,11 +167,13 @@ class User extends Authed {
 					<div uk-margin="true">
 					<button type="button" className="uk-button uk-button-primary" onClick={this.updateUser.bind(this)}>SAVE</button>
 					<button type="button" className="uk-button uk-margin-left uk-button-danger" onClick={this.deleteUser.bind(this)}>DELETE ACCOUNT</button>
+					{(this.props.login.is_admin || this.state.ownProfile) &&
 					<Link to={`/users/${this.state.userID}/deposits/`}>
 						<button type="button" className="uk-button uk-margin-left uk-button-secondary">
 							View deposits
 						</button>
 					</Link>
+					}
 					</div>
 
 				</form>
