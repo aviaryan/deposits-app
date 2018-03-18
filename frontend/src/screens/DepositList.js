@@ -98,6 +98,7 @@ class DepositList extends Authed {
 						<td>{deposit.bank}</td>
 						<td className="uk-text-nowrap">{deposit.account}</td>
 						<td>{deposit.savings}</td>
+						<td title={deposit.amount}>{deposit.amount.toFixed(2)}</td>
 						<td>{deposit.interest_rate}</td>
 						<td>{deposit.tax_rate}</td>
 						<td>{deposit.start_date}</td>
@@ -135,6 +136,7 @@ class DepositList extends Authed {
 							<th className="uk-table-shrink">ID</th>
 							<th className="uk-table-shrink">Bank</th>
 							<th className="uk-table-shrink">Account No</th>
+							<th className="uk-table-shrink">Principal</th>
 							<th className="uk-table-shrink">Amount</th>
 							<th className="uk-table-shrink">Interest Rate</th>
 							<th className="uk-table-shrink">Tax Rate</th>

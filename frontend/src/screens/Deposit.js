@@ -154,7 +154,7 @@ class Deposit extends Authed {
 					</div>
 
 					<div className="uk-margin">
-						<label className="uk-form-label" htmlFor="savings">Amount ($)</label>
+						<label className="uk-form-label" htmlFor="savings">Principal Amount ($)</label>
 						<div className="uk-form-controls">
 							<input className="uk-input" id="savings" type="number" placeholder="42"
 								value={this.state.savings} onChange={this.bind} data-bind="savings" />
