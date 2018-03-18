@@ -20,7 +20,7 @@ api = Namespace('users', description='Users', path='/')
 USER = api.model('User', {
     'id': fields.Integer(required=True),
     'email': fields.Email(required=True),
-    'username': fields.String(required=True, min=3, nospace=True, uname=True),
+    'username': fields.String(required=True, min=3, max=50, nospace=True, uname=True),
     'full_name': fields.String(min=2, max=100),
     'is_admin': fields.Boolean(default=False),
     'is_manager': fields.Boolean(default=False),

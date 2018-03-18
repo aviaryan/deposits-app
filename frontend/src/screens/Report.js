@@ -44,19 +44,21 @@ class Report extends Authed {
 				// print report magic
 				this.setState({deposits: deposits.results});
 				success('Your report should start downloading in a moment');
-				setTimeout(this.generate, 2000);
+				setTimeout(() => {
+					this.generate(this.state.username);
+				}, 2000);
 			}, respError);
 		}, respError);
 	}
 
-	generate() {
+	generate(username) {
 		console.log('run');
 		// let pdf = new jsPDF();
 		// pdf.canvas.height = 72 * 11;
 		// pdf.canvas.width = 72 * 8.5;
 		html2pdf(document.getElementById('report'), {
 			margin: 0,
-			filename: `revenue_report.pdf`,
+			filename: `revenue_report_${username}.pdf`,
 			html2canvas: { dpi: 192, letterRendering: true },
 			jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
 		});
