@@ -205,5 +205,5 @@ class BankAutoComplete(Resource):
         if not query:
             return {'banks': banks[:10]}
         else:
-            ls = list(filter(lambda bank: bank.find(query) > -1, banks))
+            ls = list(filter(lambda bank: bank.lower().find(query.lower()) > -1, banks))
             return {'banks': ls[:10]}
