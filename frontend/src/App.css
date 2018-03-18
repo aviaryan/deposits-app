@@ -2,6 +2,9 @@
 	cursor: pointer;
 }
 
+.width-170 {
+	width: 170px!important;
+}
 
 .algolia-autocomplete {
   width: 100%;

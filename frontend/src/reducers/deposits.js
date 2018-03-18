@@ -1,11 +1,11 @@
-import { SET_DEPOSITS, UPDATE_DEPOSIT, DELETE_DEPOSITS, CLEAR } from '../actions/actions'
+import { SET_DEPOSITS, UPDATE_DEPOSIT, DELETE_DEPOSITS, CLEAR, SET_DEPOSITS_OTHER, CLEAR_DEPOSITS_OTHER } from '../actions/actions'
 import { sortOnKeys, makeDict, pageState } from '../lib/utils'
 
 export default function deposits(state = pageState, action) {
 	switch (action.type) {
 		case SET_DEPOSITS:
 			action.response['results'] = sortOnKeys(makeDict(action.response['results']))
-			return action.response
+			return {...state, ...action.response}  // dont overwrite over other
 		case UPDATE_DEPOSIT:
 			let deposit = action.deposit
 			if (state.results.hasOwnProperty(deposit.id)) {
@@ -22,6 +22,12 @@ export default function deposits(state = pageState, action) {
 					delete state.results[deposit.id]
 				}
 			})
+			return state
+		case SET_DEPOSITS_OTHER:
+			state.other = { ...state.other, ...action.other }
+			return state
+		case CLEAR_DEPOSITS_OTHER:
+			state.other = {}
 			return state
 		case CLEAR:
 			return pageState

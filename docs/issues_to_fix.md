@@ -28,3 +28,8 @@ thoughts
 last times
 
 - [ ] check manager and normal user accounts as well
+
+
+can show
+
+- deposits list state saving on user deposit list

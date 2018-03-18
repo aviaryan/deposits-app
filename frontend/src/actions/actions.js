@@ -7,6 +7,8 @@ export const DELETE_USERS = 'DELETE_USERS'
 export const SET_DEPOSITS = 'SET_DEPOSITS'
 export const UPDATE_DEPOSIT = 'UPDATE_DEPOSIT'
 export const DELETE_DEPOSITS = 'DELETE_DEPOSITS'
+export const SET_DEPOSITS_OTHER = 'SET_DEPOSITS_OTHER'
+export const CLEAR_DEPOSITS_OTHER = 'CLEAR_DEPOSITS_OTHER'
 export const CLEAR = 'CLEAR'
 export const SET_VAR = 'SET_VAR'
 export const UNSET_VAR = 'UNSET_VAR'
@@ -71,6 +73,19 @@ export function deleteDeposits(deposits) {
 	return {
 		type: DELETE_DEPOSITS,
 		deposits: deposits
+	}
+}
+
+export function setDepositsOther(other) {
+	return {
+		type: SET_DEPOSITS_OTHER,
+		other: other
+	}
+}
+
+export function clearDepositsOther() {
+	return {
+		type: CLEAR_DEPOSITS_OTHER
 	}
 }
 

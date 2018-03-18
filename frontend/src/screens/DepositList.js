@@ -2,10 +2,16 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { get } from '../lib/ajax';
 import Authed from './Authed';
-import { setDeposits, setVar } from '../actions/actions';
+import { setDeposits, setVar, setDepositsOther, clearDepositsOther } from '../actions/actions';
 
 
 class DepositList extends Authed {
+	constructor(props){
+		super(props);
+		this.defaultState = { bank: '', min_amount: '', max_amount: '', from_date: '', to_date: '' };
+		this.state = this.defaultState;
+	}
+
 	componentDidMount(){
 		// get if others page or own
 		let userID = this.props.match.params.userID ?
@@ -34,7 +40,7 @@ class DepositList extends Authed {
 		this.movePage(0, otherUser, userID);
 	}
 
-	movePage(dir, otherUser = null, userID = null) {
+	movePage(dir, otherUser = null, userID = null, filterEnabled = false) {
 		let start = this.props.deposits.start;
 		if (dir === 1) {
 			start += this.props.deposits.limit;
@@ -53,11 +59,37 @@ class DepositList extends Authed {
 		}
 		// fetch
 		let url = otherUser ? `deposits/all?user_id=${userID}&` : `deposits?`;
-		get(url + `order_by=id.desc&start=${start}&limit=${this.props.deposits.limit}`, this.props.login.token, (result) => {
+		url += `order_by=id.desc&start=${start}&limit=${this.props.deposits.limit}`;
+		// set filters
+		let currentUser = otherUser ? userID : this.props.login.id;
+		if ((this.props.deposits.other.enabled || filterEnabled)) {
+			if (this.props.deposits.other.activeUser === currentUser) {
+				// same user, filter settings apply
+				let update = {};
+				['bank', 'from_date', 'to_date', 'min_amount', 'max_amount'].forEach((val) => {
+					if (this.state[val]) {
+						url += `&${val}=${this.state[val]}`;
+					} else if (this.props.deposits.other[val]) {
+						url += `&${val}=${this.props.deposits.other[val]}`;
+						update[val] = this.props.deposits.other[val];
+					}
+				});
+				// update state if not updated already, that way fields will show with values
+				this.setState(update);
+			} else {
+				// dont apply clear them
+				this.props.clearDepositsOther();
+			}
+		}
+		console.log(url);
+
+		get(url, this.props.login.token, (result) => {
 			console.log(result);
 			this.frontBtn.disabled = (!result['next']);
 			this.backBtn.disabled = (!result['previous']);
 			this.props.setDeposits(result);
+			this.props.setDepositsOther({ activeUser: otherUser ? userID : this.props.login.id });
+			// ^ important for store based rendering
 		}, (xhr) => {
 			// other user state, not valid now
 			if (xhr.responseJSON['code'] === 404) {
@@ -71,6 +103,17 @@ class DepositList extends Authed {
 			this.props.setVar('deposit_user', this.state.otherUser.username);
 		}
 		this.props.history.push("/deposits/new");
+	}
+
+	filterBtn() {
+		this.props.setDepositsOther({...this.state, ...{enabled: true}});
+		this.movePage(0, null, null, true);
+	}
+
+	clearBtn() {
+		this.setState(this.defaultState);
+		this.props.clearDepositsOther();
+		this.movePage(-2, null, null, false);
 	}
 
 	render() {
@@ -128,6 +171,41 @@ class DepositList extends Authed {
 							ref={btn => this.frontBtn = btn} onClick={() => this.movePage(1)}>▶</button>
 					</div>
 				</div>
+
+				<div className="uk-margin-top">
+					<div className="uk-inline-block">
+						<input type="text" placeholder="Bank" className="uk-input uk-form-width-small"
+							value={this.state.bank} onChange={this.bind} data-bind="bank" />
+					</div>
+
+					<div className="uk-margin-left uk-inline-block">
+						<input type="number" placeholder="Min Amount" className="uk-input uk-form-width-small"
+							value={this.state.min_amount} onChange={this.bind} data-bind="min_amount" />
+					</div>
+
+					<div className="uk-margin-left uk-inline-block">
+						<input type="number" placeholder="Max Amount" className="uk-input uk-form-width-small"
+							value={this.state.max_amount} onChange={this.bind} data-bind="max_amount" />
+					</div>
+
+					<div className="uk-margin-left uk-inline-block">
+						From:
+						<input type="date" className="uk-input uk-margin-left uk-form-width-medium width-170"
+							value={this.state.from_date} onChange={this.bind} data-bind="from_date" />
+					</div>
+
+					<div className="uk-margin-left uk-inline-block">
+						To:
+						<input type="date" className="uk-input uk-margin-left uk-form-width-medium width-170"
+							value={this.state.to_date} onChange={this.bind} data-bind="to_date" />
+					</div>
+
+					<div className="uk-inline-block uk-align-right">
+						<button className="uk-button uk-button-secondary uk-button-small" onClick={this.filterBtn.bind(this)}>Filter</button>
+						<button className="uk-button uk-button-danger uk-button-small uk-margin-left" onClick={this.clearBtn.bind(this)}>Clear</button>
+					</div>
+				</div>
+
 				<hr />
 
 				<table className="uk-table uk-table-hover uk-table-middle uk-table-divider uk-table-striped uk-table-hover">
@@ -165,6 +243,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
 	return {
 		setDeposits: result => dispatch(setDeposits(result)),
+		setDepositsOther: other => dispatch(setDepositsOther(other)),
+		clearDepositsOther: () => dispatch(clearDepositsOther()),
 		setVar: (key, val) => dispatch(setVar(key, val))
 	}
 }

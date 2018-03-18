@@ -101,7 +101,6 @@ class DepositResource():
     deposit_parser.add_argument('user_id', type=int)
     deposit_parser.add_argument('min_amount', type=float, dest='__deposit_min')
     deposit_parser.add_argument('max_amount', type=float, dest='__deposit_max')
-    # TODO: check this float thing
 
 
 @api.route('/deposits/<int:deposit_id>')
