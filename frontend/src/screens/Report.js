@@ -25,9 +25,7 @@ class Report extends Authed {
 	}
 
 	report() {
-		let username = document.getElementById('revenue-user-input').value;  // bug with autocomplete
-		this.setState({username: username});
-		get(`users/usernames/${username}`, this.props.login.token, (user) => {
+		get(`users/usernames/${this.state.username}`, this.props.login.token, (user) => {
 			let url = '';
 			if (this.props.login.is_admin) {
 				url = `deposits/all?user_id=${user.id}&`;
@@ -66,6 +64,7 @@ class Report extends Authed {
 
 	initAutoComplete() {
 		// HACK: dom not created in new case
+		let comp = this;
 		setTimeout(() => {
 			autocomplete('#revenue-user-input', {}, {
 				displayKey: suggestion => suggestion.username,
@@ -73,6 +72,8 @@ class Report extends Authed {
 				templates: {
 					suggestion: suggestion => suggestion.username + '(' + suggestion.id + ')'
 				}
+			}).on('autocomplete:selected', function (event, suggestion, dataset) {
+				comp.setState({ username: suggestion.username });
 			});
 		}, 1000);
 	}

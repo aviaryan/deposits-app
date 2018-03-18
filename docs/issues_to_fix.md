@@ -11,6 +11,7 @@
 - [x] max number input in savings
 - [ ] all feature in deposit list maybe (not said so)
 - [ ] front-end validation
+- [ ] user set password on invite
 - [x] integrate tests, be auto is_verified when testing (no mail)
 
 bugs
