@@ -146,14 +146,16 @@ class User extends Authed {
 						</div>
 					</div>
 
-					{(this.props.login.is_admin || this.props.login.is_manager) ?
 					<div className="uk-margin uk-grid-small uk-child-width-auto uk-grid">
+						{this.props.login.is_admin &&
 						<label><input className="uk-checkbox" type="checkbox"
 							checked={this.state.is_admin} onChange={this.bind} data-bind="is_admin" /> Admin?</label>
+						}
+						{( this.props.login.is_admin || (this.props.login.is_manager && (this.props.login.id === this.state.userID)) ) &&
 						<label><input className="uk-checkbox" type="checkbox"
 							checked={this.state.is_manager} onChange={this.bind} data-bind="is_manager" /> Manager?</label>
+						}
        		</div>
-					: ""}
 
 					<div uk-margin="true">
 					<button type="button" className="uk-button uk-button-primary" onClick={this.updateUser.bind(this)}>SAVE</button>
