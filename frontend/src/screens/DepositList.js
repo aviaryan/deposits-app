@@ -204,12 +204,12 @@ class DepositList extends Authed {
 					</div>
 
 					<div className="uk-margin-left uk-inline-block">
-						<input type="number" placeholder="Min Amount" className="uk-input uk-form-width-small"
+						<input type="number" placeholder="Min Deposit" className="uk-input uk-form-width-small"
 							value={this.state.min_amount} onChange={this.bind} data-bind="min_amount" />
 					</div>
 
 					<div className="uk-margin-left uk-inline-block">
-						<input type="number" placeholder="Max Amount" className="uk-input uk-form-width-small"
+						<input type="number" placeholder="Max Deposit" className="uk-input uk-form-width-small"
 							value={this.state.max_amount} onChange={this.bind} data-bind="max_amount" />
 					</div>
 
