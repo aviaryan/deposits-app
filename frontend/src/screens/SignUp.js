@@ -17,7 +17,10 @@ class SignUp extends Component {
 
 	componentDidMount(){
 		// sorry
-		document.getElementById('signUpBtn').style.display = 'none';
+		let btn = document.getElementById('signUpBtn');
+		if (btn) {
+			btn.style.display = 'none';
+		}
 	}
 
 	bind(e) {
