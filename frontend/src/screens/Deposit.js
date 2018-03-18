@@ -57,7 +57,7 @@ class Deposit extends Authed {
 	}
 
 	queryUser(query, cb){
-		get(`users/_autocomplete?query=${query}`, this.props.login.token, (users) => {
+		get(`users/_autocomplete?query=${encodeURIComponent(query)}`, this.props.login.token, (users) => {
 			cb(users);
 		});
 	}

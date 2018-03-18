@@ -74,7 +74,8 @@ class UserList extends Authed {
 						<Link to="/users/new"><button className="uk-button uk-button-primary">NEW USER</button></Link>
 					</div>
 					<div className="uk-inline-block uk-float-right">
-						<b>{this.props.users.start}</b>－<b>{Math.min(this.props.users.start + this.props.users.limit - 1, this.props.users.count)}
+						<b>{Math.min(this.props.users.start, this.props.users.count)}</b>
+							－<b>{Math.min(this.props.users.start + this.props.users.limit - 1, this.props.users.count)}
 							</b> of <b>{this.props.users.count}</b>
 						<button className="uk-button uk-button-default uk-button-small uk-margin-left"
 							ref={btn => this.backBtn = btn} onClick={() => this.movePage(-1)}>◀</button>

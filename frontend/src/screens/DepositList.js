@@ -163,7 +163,8 @@ class DepositList extends Authed {
 						<button className="uk-button uk-button-primary" onClick={this.newDeposit.bind(this)}>NEW DEPOSIT</button>
 					</div>
 					<div className="uk-inline-block uk-float-right">
-						<b>{this.props.deposits.start}</b>－<b>{Math.min(this.props.deposits.start + this.props.deposits.limit - 1, this.props.deposits.count)}
+						<b>{Math.min(this.props.deposits.start, this.props.deposits.count)}</b>
+						－<b>{Math.min(this.props.deposits.start + this.props.deposits.limit - 1, this.props.deposits.count)}
 						</b> of <b>{this.props.deposits.count}</b>
 						<button className="uk-button uk-button-default uk-button-small uk-margin-left"
 							ref={btn => this.backBtn = btn} onClick={() => this.movePage(-1)}>◀</button>
