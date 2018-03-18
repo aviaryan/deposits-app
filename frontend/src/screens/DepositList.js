@@ -68,9 +68,9 @@ class DepositList extends Authed {
 				let update = {};
 				['bank', 'from_date', 'to_date', 'min_amount', 'max_amount'].forEach((val) => {
 					if (this.state[val]) {
-						url += `&${val}=${this.state[val]}`;
+						url += `&${val}=${encodeURIComponent(this.state[val])}`;
 					} else if (this.props.deposits.other[val]) {
-						url += `&${val}=${this.props.deposits.other[val]}`;
+						url += `&${val}=${encodeURIComponent(this.props.deposits.other[val])}`;
 						update[val] = this.props.deposits.other[val];
 					}
 				});
