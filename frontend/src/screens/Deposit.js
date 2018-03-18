@@ -16,11 +16,18 @@ class Deposit extends Authed {
 	}
 
 	componentDidMount(){
+		if (!this.props.login) {
+			return;
+		}
 		if (!this.props.match.params.depositID) {
 			this.setState({new: true});
 			if (this.props.share.deposit_user) {
 				this.setState({ userEnabled: true, username: this.props.share.deposit_user });
 				this.props.unsetVar('deposit_user');
+				this.initAutoComplete();
+			} else if (this.props.login.is_admin) {
+				// admin new case
+				this.setState({ userEnabled: true, username: this.props.login.username });
 				this.initAutoComplete();
 			}
 		} else {
