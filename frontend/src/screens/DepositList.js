@@ -162,7 +162,7 @@ class DepositList extends Authed {
 					<tr key={id} className="hover-pointer"
 						onClick={() => this.props.history.push(`/deposits/${deposit.id}`)}>
 						<td>{deposit.id}</td>
-						<td>{deposit.bank}</td>
+						<td className="uk-text-small">{deposit.bank}</td>
 						<td className="uk-text-nowrap">{deposit.account}</td>
 						<td>{deposit.savings}</td>
 						<td title={deposit.amount}>{deposit.amount.toFixed(2)}</td>

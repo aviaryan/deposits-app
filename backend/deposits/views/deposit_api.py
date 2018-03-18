@@ -1,11 +1,12 @@
 from flask_restplus import Namespace, Resource, reqparse
 from flask_login import login_required
-from flask import g
+from flask import g, request
 from datetime import datetime
 
 from deposits.models.deposit_model import Deposit as DepositModel
 
 from deposits.helpers.dao import BaseDAO
+from deposits.helpers.banks import BANKS
 from deposits.helpers.errors import ValidationError
 from deposits.helpers.utils import AUTH_HEADER_DEFN, PaginatedResourceBase, PAGE_PARAMS, PAGINATED_MODEL
 from deposits.helpers.permissions import has_deposit_access, admin_only
@@ -25,6 +26,10 @@ DEPOSIT = api.model('Deposit', {
     'interest_rate': fields.Float(required=True),
     'tax_rate': fields.Float(required=True, min=0.0, max=100.0),
     'user_id': fields.Integer(min=1)  # for admin assign stuff
+})
+
+BANK_MIN = api.model('BankMin', {
+    'banks': fields.List(fields.String())
 })
 
 DEPOSIT_GET = api.clone('DepositGet', DEPOSIT, {
@@ -182,3 +187,23 @@ class DepositListAll(Resource, DepositResource, PaginatedResourceBase):
         args = self.parser.parse_args()
         parsed_args = parse_args(self.deposit_parser)
         return DAO.paginated_list(args=args, **parsed_args)
+
+
+@api.route('/deposits/banks/_autocomplete')
+class BankAutoComplete(Resource):
+    @api.header(*AUTH_HEADER_DEFN)
+    @login_required
+    @api.doc('autocomplete_banks')
+    @api.marshal_list_with(BANK_MIN)
+    def get(self):
+        """Autocomplete banks"""
+        query = request.args.get('query', None)
+        kwargs = {'user_id': g.current_user.id}
+        deposits = DAO.list(**kwargs)
+        banks = [deposit.bank for deposit in deposits] + BANKS
+        banks = list(set(banks))
+        if not query:
+            return {'banks': banks[:10]}
+        else:
+            ls = list(filter(lambda bank: bank.find(query) > -1, banks))
+            return {'banks': ls[:10]}

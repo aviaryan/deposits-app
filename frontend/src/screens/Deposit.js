@@ -19,6 +19,7 @@ class Deposit extends Authed {
 		if (!this.props.login) {
 			return;
 		}
+		this.initBankAutoComplete();
 		if (!this.props.match.params.depositID) {
 			this.setState({new: true});
 			if (this.props.share.deposit_user) {
@@ -63,9 +64,28 @@ class Deposit extends Authed {
 		}, 1000);
 	}
 
+	initBankAutoComplete() {
+		// HACK: dom not created in new case
+		setTimeout(() => {
+			autocomplete('#bank', {}, {
+				displayKey: suggestion => suggestion,
+				source: this.queryBank.bind(this),
+				templates: {
+					suggestion: suggestion => suggestion
+				}
+			});
+		}, 1000);
+	}
+
 	queryUser(query, cb){
 		get(`users/_autocomplete?query=${encodeURIComponent(query)}`, this.props.login.token, (users) => {
 			cb(users);
+		});
+	}
+
+	queryBank(query, cb){
+		get(`deposits/banks/_autocomplete?query=${encodeURIComponent(query)}`, this.props.login.token, (banks) => {
+			cb(banks['banks']);
 		});
 	}
 
@@ -81,7 +101,8 @@ class Deposit extends Authed {
 	}
 
 	saveRecord2(pack){
-		['bank', 'account', 'start_date', 'end_date'].forEach((key) => {
+		pack['bank'] = document.getElementById('bank').value;  // issue with autocomplete library
+		['account', 'start_date', 'end_date'].forEach((key) => {
 			pack[key] = this.state[key];
 		});
 		['savings', 'interest_rate', 'tax_rate'].forEach((key) => {

@@ -25,7 +25,9 @@ class Report extends Authed {
 	}
 
 	report() {
-		get(`users/usernames/${this.state.username}`, this.props.login.token, (user) => {
+		let username = document.getElementById('revenue-user-input').value;  // bug with autocomplete
+		this.setState({username: username});
+		get(`users/usernames/${username}`, this.props.login.token, (user) => {
 			let url = '';
 			if (this.props.login.is_admin) {
 				url = `deposits/all?user_id=${user.id}&`;
@@ -101,7 +103,7 @@ class Report extends Authed {
 			deposits.push(
 				<tr key={deposit.id}>
 					<td>{deposit.id}</td>
-					<td>{deposit.bank}</td>
+					<td className="font-header-print">{deposit.bank}</td>
 					<td className="uk-text-nowrap">{deposit.account}</td>
 					<td>{deposit.savings}</td>
 					<td title={deposit.amount}>{deposit.amount.toFixed(2)}</td>
@@ -160,7 +162,7 @@ class Report extends Authed {
 				<div className="uk-hidden">
 					{this.state.deposits &&
 						<div id="report" className="uk-container uk-padding">
-							<h2 className="uk-heading-divider">Revenue Report for {this.state.username}</h2>
+							<h3 className="uk-heading-divider">Revenue Report for {this.state.username}</h3>
 
 							<div className="uk-text-small">
 								<p>This document reports the profits/losses from deposits of the user.</p>
