@@ -109,7 +109,7 @@ class Report extends Authed {
 					<td>{deposit.savings}</td>
 					<td title={deposit.amount}>{deposit.amount.toFixed(2)}</td>
 					<td>{deposit.interest_rate}</td>
-					<td className={deposit.interest < 0 ? "color-red" : deposit.interest > 0 ? "color-green" : ""}>{deposit.interest}</td>
+					<td className={deposit.interest < 0 ? "color-red" : deposit.interest > 0 ? "color-green" : ""}>{Math.abs(deposit.interest)}</td>
 					<td>{deposit.tax_rate}</td>
 					<td className={deposit.tax > 0 ? "color-red" : ""}>{deposit.tax}</td>
 					<td>{deposit.start_date}</td>
@@ -206,7 +206,7 @@ class Report extends Authed {
 								<b>Total Profit:</b> <span className="color-green">${netProfit.toFixed(3)}</span>
 								<br />
 								<b>Net: </b>
-									<span className={netLoss > netProfit ? "color-red" : (netProfit > netLoss) ? "color-green" : ""}>${(netProfit - netLoss).toFixed(3)}
+									<span className={netLoss > netProfit ? "color-red" : (netProfit > netLoss) ? "color-green" : ""}>${Math.abs(netProfit - netLoss).toFixed(3)}
 								</span>
 							</div>
 						</div>
