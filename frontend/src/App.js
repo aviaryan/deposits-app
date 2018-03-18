@@ -16,6 +16,7 @@ import UserList from './screens/UserList';
 import SignUp from './screens/SignUp';
 import Verify from './screens/Verify';
 import Deposit from './screens/Deposit';
+import Report from './screens/Report';
 
 
 class App extends Component {
@@ -32,6 +33,7 @@ class App extends Component {
 								<div className="uk-navbar-right">
 									<ul className="uk-navbar-nav">
 										<li><Link to="/profile">@{this.props.login.username}</Link></li>
+										<li><Link to="/report">REPORT</Link></li>
 										{(this.props.login.is_admin || this.props.login.is_manager) &&
 											<li><Link to="/users">USERS</Link></li>
 										}
@@ -58,6 +60,7 @@ class App extends Component {
 							<Route exact path='/profile' component={User} />
 							<Route exact path='/users' component={UserList} />
 							<Route exact path='/verify' component={Verify} />
+							<Route exact path='/report' component={Report} />
 							<Route exact path="/deposits/new" component={Deposit} />
 							<Route exact path="/deposits/:depositID" component={Deposit} />
 						</Switch></div>

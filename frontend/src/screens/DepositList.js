@@ -8,6 +8,7 @@ import { setDeposits, setVar, setDepositsOther, clearDepositsOther } from '../ac
 class DepositList extends Authed {
 	constructor(props){
 		super(props);
+		this.bindFields = ['bank', 'from_date', 'to_date', 'min_amount', 'max_amount'];
 		this.defaultState = { bank: '', min_amount: '', max_amount: '', from_date: '', to_date: '' };
 		this.state = this.defaultState;
 	}
@@ -66,12 +67,16 @@ class DepositList extends Authed {
 			if (this.props.deposits.other.activeUser === currentUser) {
 				// same user, filter settings apply
 				let update = {};
-				['bank', 'from_date', 'to_date', 'min_amount', 'max_amount'].forEach((val) => {
-					if (this.state[val]) {
-						url += `&${val}=${encodeURIComponent(this.state[val])}`;
-					} else if (this.props.deposits.other[val]) {
+				this.bindFields.forEach((val) => {
+					if (this.props.deposits.other[val]) {
+						// having this one on top helps to maintain shit when query changed softly and page changed
 						url += `&${val}=${encodeURIComponent(this.props.deposits.other[val])}`;
-						update[val] = this.props.deposits.other[val];
+						if (!this.state[val]) {
+							// should be updated obviously
+							update[val] = this.props.deposits.other[val];
+						}
+					} else if (this.state[val]) {
+						url += `&${val}=${encodeURIComponent(this.state[val])}`;
 					}
 				});
 				// update state if not updated already, that way fields will show with values
@@ -106,8 +111,18 @@ class DepositList extends Authed {
 	}
 
 	filterBtn() {
-		this.props.setDepositsOther({...this.state, ...{enabled: true}});
-		this.movePage(0, null, null, true);
+		let really = false;
+		this.bindFields.forEach((val) => {
+			if (this.state[val]) {
+				really = true;
+			}
+		})
+		if (really) {
+			// helps to check enabling filter mode when no input
+			// can be dangerous because bind inputs will then go in get() request above
+			this.props.setDepositsOther({ ...this.state, ...{ enabled: true } });
+			this.movePage(0, null, null, true);
+		}
 	}
 
 	clearBtn() {
