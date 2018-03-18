@@ -149,23 +149,46 @@ class Float(CustomField):
             return False
 
 
+def get_values_for_deposit(id_):
+    """
+    returns interest, tax and amount for a deposit
+    """
+    deposit = Deposit.query.get(id_)
+    # calc interest
+    end = min(date.today(), deposit.end_date)
+    delta = end - deposit.start_date
+    days = delta.days
+    ipd = deposit.interest_rate / 360.0
+    interest = deposit.savings * ipd * days / 100.0
+    if interest > 0:
+        tax = deposit.tax_rate * interest / 100.0
+    else:
+        tax = 0
+    return interest, tax, deposit.savings + interest - tax
+
+
 class Amount(Float):
     """
     Amount field for deposits
     """
     def format(self, value):
-        deposit = Deposit.query.get(value)
-        # calc interest
-        end = min(date.today(), deposit.end_date)
-        delta = end - deposit.start_date
-        days = delta.days
-        ipd = deposit.interest_rate / 360.0
-        interest = deposit.savings * ipd * days / 100.0
-        if interest > 0:
-            tax = deposit.tax_rate * interest / 100.0
-        else:
-            tax = 0
-        return deposit.savings + interest - tax
+        return get_values_for_deposit(value)[2]
+
+
+class Interest(Float):
+    """
+    Interest field for deposits
+    """
+    def format(self, value):
+        return get_values_for_deposit(value)[0]
+
+
+class Tax(Float):
+    """
+    Tax field for deposits
+    """
+    def format(self, value):
+        return get_values_for_deposit(value)[1]
 
 
 class Boolean(CustomField):

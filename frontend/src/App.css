@@ -6,6 +6,22 @@
 	width: 170px!important;
 }
 
+.font-small-print {
+	font-size: 10px!important;
+}
+
+.font-header-print {
+	font-size: 9px!important;
+}
+
+.color-red {
+	color: red;
+}
+
+.color-green {
+	color: green;
+}
+
 .algolia-autocomplete {
   width: 100%;
 }

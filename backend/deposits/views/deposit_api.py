@@ -28,7 +28,9 @@ DEPOSIT = api.model('Deposit', {
 })
 
 DEPOSIT_GET = api.clone('DepositGet', DEPOSIT, {
-    'amount': fields.Amount(attribute='id')
+    'amount': fields.Amount(attribute='id'),
+    'interest': fields.Interest(attribute='id'),
+    'tax': fields.Tax(attribute='id')
 })
 
 DEPOSIT_PAGINATED = api.clone('DepositPaginated', PAGINATED_MODEL, {
