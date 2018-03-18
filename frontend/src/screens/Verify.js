@@ -60,5 +60,5 @@ const mapDispatchToProps = dispatch => {
 	}
 }
 
-// TODO: update users state
+// NOTODO: update users state, not needed though
 export default connect(null, mapDispatchToProps)(Verify);

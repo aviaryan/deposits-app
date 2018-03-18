@@ -32,7 +32,7 @@ class BaseDAO:
 
     def update(self, id_, data, validate=True, user_id=None):
         if validate:
-            data = self.validate_put(data, self.put_api_model)
+            data = self.validate_put(data, self.put_api_model, id_=id_)
         item = update_model(self.model, id_, data, user_id=user_id)
         return item
 
@@ -40,23 +40,23 @@ class BaseDAO:
         item = delete_model(self.model, id_, user_id=user_id)
         return item
 
-    def validate(self, data, model=None, check_required=True):
+    def validate(self, data, model=None, check_required=True, id_=None):
         if not model:
             model = self.post_api_model
         if model:
             data = handle_extra_payload(data, model)
             validate_payload(data, model, check_required=check_required)
-            self.full_check(data)
+            self.full_check(data, id_=id_)
             data = fix_attribute_names(data, model)
         return data
 
-    def validate_put(self, data, model=None):
+    def validate_put(self, data, model=None, id_=None):
         """
         Abstraction over validate with check_required set to False
         """
-        return self.validate(data, model=model, check_required=False)
+        return self.validate(data, model=model, check_required=False, id_=id_)
 
-    def full_check(self, data):
+    def full_check(self, data, id_=None):
         """
         Check data with their relationship to one another
         """

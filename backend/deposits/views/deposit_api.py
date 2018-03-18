@@ -53,10 +53,15 @@ class DepositDAO(BaseDAO):
             data['user_id'] = current_user.id
         return data['user_id']
 
-    def full_check(self, data):
+    def full_check(self, data, id_=None):
         if not data.get('start_date'):
-            return  # happens in case of update request
-            # TODO: handle only end_date here
+            # handle only end_date here
+            # happens in case of update request
+            if data.get('end_date') and id_:
+                deposit = DAO.get(id_)
+                if fields.Date().from_str(data['end_date']).date() <= deposit.start_date:
+                    raise ValidationError('end_date', 'End date should be more than start date')
+            return
         start = fields.Date().from_str(data['start_date'])
         if start > datetime.now():
             raise ValidationError('start_date', 'Start date should be today or some date before that')

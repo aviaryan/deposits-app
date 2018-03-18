@@ -92,7 +92,7 @@ class Deposit extends Authed {
 				console.log(deposit);
 				success('Deposit record saved!');
 				this.props.history.goBack();
-				// TODO: not sure about behavior here
+				// TODO: not sure about behavior here, current is good
 			}, respError, this.props.login.token);
 		} else {
 			put(`deposits/${this.state.depositID}`, pack, this.props.login.token, (deposit) => {
