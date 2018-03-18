@@ -275,6 +275,9 @@ class DepositList extends Authed {
 						{deposits}
 					</tbody>
 				</table>
+				{deposits.length === 0 &&
+					<div className="uk-margin-large-top uk-text-center@s uk-text-large">No results found</div>
+				}
 			</div>
 		)
 	}

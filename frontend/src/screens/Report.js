@@ -45,7 +45,7 @@ class Report extends Authed {
 				console.log(deposits);
 				// print report magic
 				this.setState({deposits: deposits.results});
-				success('Your file should start downloading in a moment');
+				success('Your report should start downloading in a moment');
 				setTimeout(this.generate, 2000);
 			}, respError);
 		}, respError);
@@ -194,15 +194,18 @@ class Report extends Authed {
 									{deposits}
 								</tbody>
 							</table>
+							{deposits.length === 0 &&
+								<div className="uk-margin-large-top uk-text-center@s uk-text-large">No results found</div>
+							}
 
 							{/* final */}
 							<div className="uk-text-small">
-								<b>Total Loss:</b> <span className="color-red">{netLoss.toFixed(3)}</span>
+								<b>Total Loss:</b> <span className="color-red">${netLoss.toFixed(3)}</span>
 								<br />
-								<b>Total Profit:</b> <span className="color-green">{netProfit.toFixed(3)}</span>
+								<b>Total Profit:</b> <span className="color-green">${netProfit.toFixed(3)}</span>
 								<br />
 								<b>Net: </b>
-									<span className={netLoss > netProfit ? "color-red" : (netProfit > netLoss) ? "color-green" : ""}>{(netProfit - netLoss).toFixed(3)}
+									<span className={netLoss > netProfit ? "color-red" : (netProfit > netLoss) ? "color-green" : ""}>${(netProfit - netLoss).toFixed(3)}
 								</span>
 							</div>
 						</div>

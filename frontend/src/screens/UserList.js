@@ -111,6 +111,9 @@ class UserList extends Authed {
 						{users}
 					</tbody>
 				</table>
+				{users.length === 0 &&
+					<div className="uk-margin-large-top uk-text-center@s uk-text-large">No results found</div>
+				}
 			</div>
 		)
 	}
