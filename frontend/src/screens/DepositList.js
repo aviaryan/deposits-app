@@ -265,8 +265,8 @@ class DepositList extends Authed {
 							<th className="uk-table-shrink">Account No</th>
 							<th className="uk-table-shrink">Principal ($)</th>
 							<th className="uk-table-shrink">Amount ($)</th>
-							<th className="uk-table-shrink">Interest Rate (%)</th>
-							<th className="uk-table-shrink">Tax Rate (%)</th>
+							<th className="uk-table-shrink">Interest Rate(%)</th>
+							<th className="uk-table-shrink">Tax Rate(%)</th>
 							<th className="uk-table-shrink">Start Date</th>
 							<th className="uk-table-shrink">End Date</th>
 						</tr>

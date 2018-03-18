@@ -62,8 +62,12 @@ class UserList extends Authed {
 						<td className="uk-text-nowrap">{user.full_name}</td>
 						<td>{user.email}</td>
 						<td>{user.username}</td>
+						{this.props.login.is_admin &&
 						<td><input className="uk-checkbox" type="checkbox" checked={user.is_admin} disabled="true" /></td>
+						}
+						{this.props.login.is_admin &&
 						<td><input className="uk-checkbox" type="checkbox" checked={user.is_manager} disabled="true" /></td>
+						}
 					</tr>
 				);
 			}
@@ -95,8 +99,12 @@ class UserList extends Authed {
 							<th className="uk-table-shrink">Name</th>
 							<th>Email</th>
 							<th>Username</th>
+							{this.props.login.is_admin &&
 							<th className="uk-table-shrink">Admin?</th>
+							}
+							{this.props.login.is_admin &&
 							<th className="uk-table-shrink">Manager?</th>
+							}
 						</tr>
 					</thead>
 					<tbody>
