@@ -6,7 +6,7 @@
 - [x] username instead of id for deposits, username - user endpoint
 - [x] implement change password
 - [x] fine tune is_verified (or send welcome email on join)
-- [ ] list of banks (looks important)
+- [x] list of banks (looks important)
 - [x] username a-z0-9-_
 - [x] max number input in savings
 - [ ] all feature in deposit list maybe (not said so)
