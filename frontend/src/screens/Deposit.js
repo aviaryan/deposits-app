@@ -95,6 +95,7 @@ class Deposit extends Authed {
 	saveRecord(){
 		if (this.props.login.is_admin && this.state.userEnabled) {
 			let temp = document.getElementById('username-input').value;
+			// NOTODO: getElementById can be evil but I this is unique and it works
 			get(`users/usernames/${temp}`, this.props.login.token, (user) => {
 				this.saveRecord2({user_id: user.id});
 			}, respError);

@@ -74,6 +74,14 @@ class UserDAO(BaseDAO):
         # update password
         if data.get('password'):
             data = self.update_password(data)
+        # check username
+        for field in ['username', 'email']:
+            if data.get(field):
+                dc = {}
+                dc[field] = data[field]
+                user = UserModel.query.filter_by(**dc).first()
+                if user.id != id_:
+                    raise ValidationError(field, 'The {} already exists'.format(field))
         # save
         return super(UserDAO, self).update(id_, data, validate=False, user_id=None)
 
