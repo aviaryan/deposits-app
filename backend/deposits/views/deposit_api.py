@@ -27,8 +27,12 @@ DEPOSIT = api.model('Deposit', {
     'user_id': fields.Integer(min=1)  # for admin assign stuff
 })
 
+DEPOSIT_GET = api.clone('DepositGet', DEPOSIT, {
+    'amount': fields.Amount(attribute='id')
+})
+
 DEPOSIT_PAGINATED = api.clone('DepositPaginated', PAGINATED_MODEL, {
-    'results': fields.List(fields.Nested(DEPOSIT))
+    'results': fields.List(fields.Nested(DEPOSIT_GET))
 })
 
 DEPOSIT_POST = api.clone('DepositPost', DEPOSIT, {})
@@ -106,7 +110,7 @@ class Deposit(Resource):
     @has_deposit_access
     @api.header(*AUTH_HEADER_DEFN)
     @api.doc('get_deposit')
-    @api.marshal_with(DEPOSIT)
+    @api.marshal_with(DEPOSIT_GET)
     def get(self, deposit_id):
         """Fetch a deposit given its id"""
         return DAO.get(deposit_id)
@@ -115,7 +119,7 @@ class Deposit(Resource):
     @has_deposit_access
     @api.header(*AUTH_HEADER_DEFN)
     @api.doc('update_deposit')
-    @api.marshal_with(DEPOSIT)
+    @api.marshal_with(DEPOSIT_GET)
     @api.expect(DEPOSIT_POST)
     def put(self, deposit_id):
         """Update a deposit given its id"""
@@ -138,7 +142,7 @@ class DepositList(Resource, DepositResource, PaginatedResourceBase):
     @api.header(*AUTH_HEADER_DEFN)
     @login_required
     @api.doc('create_deposit')
-    @api.marshal_with(DEPOSIT)
+    @api.marshal_with(DEPOSIT_GET)
     @api.expect(DEPOSIT_POST)
     def post(self):
         """Create a deposit"""

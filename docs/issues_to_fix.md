@@ -17,6 +17,7 @@ bugs
 - [x] lag on homepage when logged in
 - [x] end date null from UI
 - [ ] sign up button on sign up page
+- [ ] is_admin / manager buttons on manager's user page
 - [x] order in lists deposits and users
 
 thoughts

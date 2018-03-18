@@ -1,5 +1,7 @@
 import re
+from datetime import date
 from flask_restplus.fields import Raw
+from deposits.models.deposit_model import Deposit
 from flask_restplus.fields import List, Nested  # noqa
 from datetime import datetime
 
@@ -145,6 +147,25 @@ class Float(CustomField):
         except Exception:
             self.validation_error = '%s should be a Number'
             return False
+
+
+class Amount(Float):
+    """
+    Amount field for deposits
+    """
+    def format(self, value):
+        deposit = Deposit.query.get(value)
+        # calc interest
+        end = min(date.today(), deposit.end_date)
+        delta = end - deposit.start_date
+        days = delta.days
+        ipd = deposit.interest_rate / 360.0
+        interest = deposit.savings * ipd * days / 100.0
+        if interest > 0:
+            tax = deposit.tax_rate * interest / 100.0
+        else:
+            tax = 0
+        return deposit.savings + interest - tax
 
 
 class Boolean(CustomField):
