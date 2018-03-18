@@ -40,4 +40,4 @@ class Login(Resource):
             token = generate_token(user)
             return {'token': token}
         else:
-            raise NotAuthorizedError('Bad Credentials. Contact sa@gmail.com if you have forgotten password.')
+            raise NotAuthorizedError('Bad Credentials. Contact deposits@aviaryan.com if you have forgotten password.')
