@@ -37,3 +37,9 @@ last times
 can show
 
 - deposits list state saving on user deposit list
+
+
+known
+
+- the whole verified fiasco
+- account number bank pairs - no way of verifying now so
