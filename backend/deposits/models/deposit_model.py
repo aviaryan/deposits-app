@@ -10,7 +10,8 @@ class Deposit(db.Model):
     savings = db.Column(db.Float, nullable=False)
 
     start_date = db.Column(db.Date, nullable=False)
-    end_date = db.Column(db.Date, nullable=True)  # because savings can be current
+    end_date = db.Column(db.Date, nullable=False)  # because savings can be current
+    # https://en.wikipedia.org/wiki/Deposit_account
 
     interest_rate = db.Column(db.Float, nullable=False)
     tax_rate = db.Column(db.Float, nullable=False)

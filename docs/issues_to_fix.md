@@ -6,15 +6,16 @@
 - [x] username instead of id for deposits, username - user endpoint
 - [x] implement change password
 - [ ] fine tune is_verified (or send welcome email on join)
+- [ ] list of banks (looks important)
+- [ ] all feature in deposit list maybe (not said so)
 - [ ] front-end validation
-- [ ] list of banks
 - [x] integrate tests, be auto is_verified when testing (no mail)
 
 bugs
 
 - [x] confirmation on delete
 - [x] lag on homepage when logged in
-- [ ] end date null from UI
+- [x] end date null from UI
 - [ ] sign up button on sign up page
 - [x] order in lists deposits and users
 

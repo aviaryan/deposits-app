@@ -21,7 +21,7 @@ DEPOSIT = api.model('Deposit', {
     'account': fields.String(required=True, min=11, max=20, alnum=True),
     'savings': fields.Float(required=True, minx=0.0),
     'start_date': fields.Date(required=True),
-    'end_date': fields.Date(required=False),
+    'end_date': fields.Date(required=True),
     'interest_rate': fields.Float(required=True),
     'tax_rate': fields.Float(required=True, min=0.0, max=100.0),
     'user_id': fields.Integer(min=1)  # for admin assign stuff
@@ -50,14 +50,15 @@ class DepositDAO(BaseDAO):
     def full_check(self, data):
         if not data.get('start_date'):
             return  # happens in case of update request
+            # TODO: handle only end_date here
         start = fields.Date().from_str(data['start_date'])
         if start > datetime.now():
             raise ValidationError('start_date', 'Start date should be today or some date before that')
-        if not data.get('end_date'):
-            return
+        # if not data.get('end_date'):
+        #     return
         end = fields.Date().from_str(data['end_date'])
-        if end < start:
-            raise ValidationError('end_date', 'End date is less than start date')
+        if end <= start:
+            raise ValidationError('end_date', 'End date should be more than start date')
 
 DAO = DepositDAO(DepositModel, DEPOSIT_POST)
 
