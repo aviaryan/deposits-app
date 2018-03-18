@@ -66,6 +66,7 @@ class Deposit extends Authed {
 
 	initBankAutoComplete() {
 		// HACK: dom not created in new case
+		let comp = this;
 		setTimeout(() => {
 			autocomplete('#bank', {}, {
 				displayKey: suggestion => suggestion,
@@ -73,6 +74,8 @@ class Deposit extends Authed {
 				templates: {
 					suggestion: suggestion => suggestion
 				}
+			}).on('autocomplete:selected', function (event, suggestion, dataset) {
+				comp.setState({ bank: suggestion });
 			});
 		}, 1000);
 	}
@@ -101,8 +104,7 @@ class Deposit extends Authed {
 	}
 
 	saveRecord2(pack){
-		pack['bank'] = document.getElementById('bank').value;  // issue with autocomplete library
-		['account', 'start_date', 'end_date'].forEach((key) => {
+		['bank', 'account', 'start_date', 'end_date'].forEach((key) => {
 			pack[key] = this.state[key];
 		});
 		['savings', 'interest_rate', 'tax_rate'].forEach((key) => {
