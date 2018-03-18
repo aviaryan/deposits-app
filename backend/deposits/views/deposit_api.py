@@ -81,10 +81,10 @@ DEPOSIT_PARAMS = {
     },
     'bank': {},
     'user_id': {},
-    'min_savings': {
+    'min_amount': {
         'description': 'Deposits done with minimum this amount'
     },
-    'max_savings': {
+    'max_amount': {
         'description': 'Deposits done with maximum this amount'
     },
 }
@@ -99,8 +99,8 @@ class DepositResource():
     deposit_parser.add_argument('order_by', type=str, dest='__deposit_order_by')
     deposit_parser.add_argument('bank', type=str)
     deposit_parser.add_argument('user_id', type=int)
-    deposit_parser.add_argument('min_savings', type=float, dest='__deposit_min')
-    deposit_parser.add_argument('max_savings', type=float, dest='__deposit_max')
+    deposit_parser.add_argument('min_amount', type=float, dest='__deposit_min')
+    deposit_parser.add_argument('max_amount', type=float, dest='__deposit_max')
     # TODO: check this float thing
 
 

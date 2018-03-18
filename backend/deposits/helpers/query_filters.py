@@ -1,5 +1,6 @@
 from deposits.models.deposit_model import Deposit
 from deposits.models.user_model import User
+from .custom_fields import Amount
 from .custom_fields import Date
 
 
@@ -37,11 +38,23 @@ def deposit_to(value, query):
 
 
 def deposit_min(value, query):
-    return query.filter(Deposit.savings >= query)
+    items = query
+    queries = []
+    for item in items:
+        amount = Amount.format(None, item.id)
+        if amount >= value:
+            queries.append(item)
+    return queries
 
 
 def deposit_max(value, query):
-    return query.filter(Deposit.savings <= query)
+    items = query
+    queries = []
+    for item in items:
+        amount = Amount.format(None, item.id)
+        if amount <= value:
+            queries.append(item)
+    return queries
 
 
 def deposit_order_by(value, query):
