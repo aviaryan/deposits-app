@@ -2,6 +2,7 @@ import { SET_USERS, UPDATE_USER, DELETE_USERS, CLEAR } from '../actions/actions'
 import { sortOnKeys, makeDict, pageState } from '../lib/utils'
 
 let pgState = JSON.parse(JSON.stringify(pageState))
+pgState['limit'] = 10
 
 export default function users(state = pgState, action) {
 	switch (action.type) {

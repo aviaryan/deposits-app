@@ -21,4 +21,4 @@ export function makeDict(arr) {
 	return dct
 }
 
-export let pageState = {start: 1, count: 0, limit: 3, next: '', previous: '', results: [], other: {}}
+export let pageState = {start: 1, count: 0, limit: 5, next: '', previous: '', results: [], other: {}}
