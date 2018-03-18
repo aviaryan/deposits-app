@@ -9,8 +9,8 @@ export function notify(message, timeout = 1400, type = 'warning', position = 'to
 	});
 }
 
-export function success(message){
-	notify(message, 1400, 'success', 'bottom-right');
+export function success(message, timeout = 1400){
+	notify(message, timeout, 'success', 'bottom-right');
 }
 
 export function danger(message){

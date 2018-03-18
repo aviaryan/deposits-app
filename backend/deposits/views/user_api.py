@@ -82,8 +82,21 @@ class UserDAO(BaseDAO):
                 user = UserModel.query.filter_by(**dc).first()
                 if user and user.id != id_:
                     raise ValidationError(field, 'The {} already exists'.format(field))
+        # check email change
+        code = 200
+        is_normal = (not g.current_user.is_admin) and (not g.current_user.is_manager)
+        # is_own = (g.current_user.id == id_)
+        # only own profile or
+        if data.get('email') and (is_normal):
+            user = UserModel.query.get(id_)
+            if user.email != data['email']:
+                data['is_verified'] = False
+                code = 201
         # save
-        return super(UserDAO, self).update(id_, data, validate=False, user_id=None)
+        user = super(UserDAO, self).update(id_, data, validate=False, user_id=None)
+        if code == 201:  # email change
+            send_verify_mail(user.email, user.username, generate_token(user))
+        return user, code
 
     def fix_access_levels(self, data, id_=None):
         """
@@ -195,7 +208,8 @@ class UserVerify(Resource):
         user.is_verified = True
         save_to_db(user)
         # welcome
-        send_welcome_mail(user.email, user.username)
+        # bugs with email change verify
+        # send_welcome_mail(user.email, user.username)
         return user
 
 

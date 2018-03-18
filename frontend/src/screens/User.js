@@ -43,10 +43,17 @@ class User extends Authed {
 			is_admin: this.state.is_admin,
 			is_manager: this.state.is_manager
 		};
-		put(`users/${this.state.userID}`, pack, this.props.login.token, (res) => {
+		put(`users/${this.state.userID}`, pack, this.props.login.token, (res, textStatus, xhr) => {
 			console.log(res);
 			success('Profile updated!');
 			this.props.updateUserStore(pack, this.state.ownProfile);
+			// email change
+			if (xhr.status === 201) {
+				if (this.state.ownProfile) {
+					success('You changed your account email. Please verify it and log in again.', 3500);
+					this.props.logOut();
+				}
+			}
 		}, respError);
 	}
 
